@@ -1,2 +1,6 @@
+.vscode
 *.docx
 *.pdf
+*.exe
+*.o
+*.c

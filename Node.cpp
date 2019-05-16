@@ -7,12 +7,17 @@
 #include "Node.h"
 
 void base::reiscal() {
+    deri_value = 0;
     iscal = false;
     // 递归调用清空所有被调用节点的计算状态
     // 保证每次执行新的EVAL时
     // 结点状态都是未调用
-    for (int i = 0; i < input.size(); i++) {
-        input[i]->reiscal();
+    // for (int i = 0; i < input.size(); i++) {
+    //     input[i]->reiscal();
+    // }
+    for (auto p :input) {
+        p->reiscal();
+        p->rederi();
     }
 }
 
@@ -36,8 +41,7 @@ bool singleoperation::calculate() {
     } else {  // 判断计算类型
         if (operationname == "SIN") {
             set(sin(input[0]->value()));
-        }
-        if (operationname == "LOG") {
+        } else if (operationname == "LOG") {
             // 判断定义域
             if (input[0]->value() <= 0) {
                 std::cout
@@ -47,19 +51,13 @@ bool singleoperation::calculate() {
             } else {
                 set(log(input[0]->value()));
             }
-        }
-
-        if (operationname == "EXP") {
+        } else if (operationname == "EXP") {
             set(exp(input[0]->value()));
-        }
-
-        if (operationname == "TANH") {
+        } else if (operationname == "TANH") {
             set(tanh(input[0]->value()));
-        }
-        if (operationname == "SIGMOID") {
+        } else if (operationname == "SIGMOID") {
             set((1 / (1 + exp(-(input[0]->value())))));
-        }
-        if (operationname == "PRINT") {
+        } else if (operationname == "PRINT") {
             set(input[0]->value());
             std::cout << "PRINT operator: " << nodename << " = ";
             std::cout << std::fixed << std::setprecision(4)
@@ -80,18 +78,13 @@ bool binaryoperation::calculate() {
         if (operationname == "+") {
             double tmp = input[0]->value() + input[1]->value();
             set(tmp);
-        }
-
-        if (operationname == "-") {
+        } else if (operationname == "-") {
             double tmp = input[0]->value() - input[1]->value();
             set(tmp);
-        }
-        if (operationname == "*") {
+        } else if (operationname == "*") {
             double tmp = input[0]->value() * input[1]->value();
             set(tmp);
-        }
-
-        if (operationname == "/") {
+        } else if (operationname == "/") {
             if (input[1]->value() != 0) {
                 double tmp = input[0]->value() / input[1]->value();
                 set(tmp);
@@ -99,37 +92,27 @@ bool binaryoperation::calculate() {
                 std::cout << "ERROR: Division by zero" << std::endl;
                 return false;
             }
-        }
-
-        if (operationname == ">") {
+        } else if (operationname == ">") {
             if (input[0]->value() > input[1]->value())
                 set(1.0);
             else
                 set(0.0);
-        }
-
-        if (operationname == ">=") {
+        } else if (operationname == ">=") {
             if (input[0]->value() >= input[1]->value())
                 set(1.0);
             else
                 set(0.0);
-        }
-
-        if (operationname == "<") {
+        } else if (operationname == "<") {
             if (input[0]->value() < input[1]->value())
                 set(1.0);
             else
                 set(0.0);
-        }
-
-        if (operationname == "<=") {
+        } else if (operationname == "<=") {
             if (input[0]->value() <= input[1]->value())
                 set(1.0);
             else
                 set(0.0);
-        }
-
-        if (operationname == "==") {
+        } else if (operationname == "==") {
             if (input[0]->value() == input[1]->value())
                 set(1.0);
             else
@@ -164,3 +147,59 @@ bool COND::calculate() {
     }
     return false;
 }
+
+bool GRAD::calculate() {
+    if (iscalculated())
+        return true;
+    if (input[0]->calculate()) {
+        this->derivate(1.0);
+        iscal = true;
+        return true;
+    }
+    return false;
+}
+
+bool AT::calculate() {
+    if (iscalculated()) 
+        return true;
+    if (input[0]->calculate()) {
+        double tmp = input[1]->get_deri();
+        set(tmp);
+        return true;
+    }
+    return false;
+}
+
+void binaryoperation::derivate(double pre_deri_value) {
+    if (operationname == "+") {
+        input[0]->set_deri(pre_deri_value * 1);
+        input[0]->derivate(input[0]->get_deri());
+        input[1]->set_deri(pre_deri_value * 1);
+        input[1]->derivate(input[1]->get_deri());
+    } else if (operationname == "-") {
+        
+    } else if (operationname == "*") {
+        input[0]->set_deri(pre_deri_value * input[1]->value());
+        input[0]->derivate(input[0]->get_deri());
+        input[1]->set_deri(pre_deri_value * input[0]->value());
+        input[1]->derivate(input[1]->get_deri());
+    } else if (operationname == "/") {
+        
+    } else if (operationname == ">") {
+        
+    } else if (operationname == ">=") {
+        
+    } else if (operationname == "<") {
+        
+    } else if (operationname == "<=") {
+        
+    } else if (operationname == "==") {
+        
+    }
+}
+
+void GRAD::derivate(double pre_deri_value) {
+    input[0]->set_deri(pre_deri_value);
+    input[0]->derivate(1.0);
+}
+
