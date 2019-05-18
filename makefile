@@ -1,16 +1,19 @@
-all: main
+all: main1 main2
 
-main: main.o Input.o Node.o Input.h Node.h
-	g++ -o main main.o Input.o Node.o -std=c++14 -Wall
+main1: main.o Input.o Node.o Input.h Node.h
+	g++ -o main1 main.o Input.o Node.o -std=c++14 -Wall
+
+main2: main.o Input.o Node.o Input.h Node.h
+	g++ -o main2 main.o Input.o Node.o -std=c++14 -Wall
 
 main.o: main.cpp Input.h Node.h
-	g++ -o main.o -c main.cpp
+	g++ -o main.o -c main.cpp -Wall
 
 Input.o: Input.cpp Input.h Node.h
-	g++ -o Input.o -c Input.cpp
+	g++ -o Input.o -c Input.cpp -Wall
 
 Node.o: Node.cpp Node.h
-	g++ -o Node.o -c Node.cpp
+	g++ -o Node.o -c Node.cpp -Wall
 
 clean_w:
 	del *.exe *.o
