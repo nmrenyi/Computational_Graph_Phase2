@@ -37,6 +37,7 @@ class base {
 class Constant :public base {
  public:
     Constant() {}
+    void set(double) = delete; // 确保常量不可以修改
     void derivate(double pre_deri_value) {}; 
     bool calculate() { return true; }  // 常量恒为真值
 };
