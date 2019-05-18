@@ -214,15 +214,20 @@ void binaryoperation::derivate(double deri_value) {
             input[0]->derivate(get_deri() / input[1]->value());
             input[1]->derivate(get_deri() * (- input[0]->value() / input[1]->value() / input[1]->value()));
         } else if (operationname == ">") {
-            
+            input[0]->derivate(get_deri() > 0 ? get_deri() : -get_deri());
+            input[1]->derivate(get_deri() > 0 ? -get_deri() : get_deri());
         } else if (operationname == ">=") {
-            
+            input[0]->derivate(get_deri() >= 0 ? get_deri() : -get_deri());
+            input[1]->derivate(get_deri() >= 0 ? -get_deri() : get_deri());
         } else if (operationname == "<") {
-            
+            input[0]->derivate(get_deri() < 0 ? get_deri() : -get_deri());
+            input[1]->derivate(get_deri() < 0 ? -get_deri() : get_deri());
         } else if (operationname == "<=") {
-            
+            input[0]->derivate(get_deri() <= 0 ? get_deri() : -get_deri());
+            input[1]->derivate(get_deri() <= 0 ? -get_deri() : get_deri());
         } else if (operationname == "==") {
-            
+            input[0]->derivate(get_deri() == 0 ? get_deri() : -get_deri());
+            input[1]->derivate(get_deri() == 0 ? -get_deri() : get_deri());
         }
     }
 }
