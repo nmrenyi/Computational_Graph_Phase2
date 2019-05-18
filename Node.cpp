@@ -180,61 +180,50 @@ void Placeholder::derivate(double deri_value) {
 }
 
 void singleoperation::derivate(double deri_value) {
-    if(!set_visit_num()) {
-        set_deri(deri_value);
-        return ;
-    }
-    if (operationname == "SIN") {
-        set_deri(deri_value);
-        input[0]->derivate(get_deri() * cos(input[0]->value()));
-    } else if (operationname == "LOG") {
-        set_deri(deri_value);
-        input[0]->derivate(get_deri() / input[0]->value());
-    } else if (operationname == "EXP") {
-        set_deri(deri_value);
-        input[0]->derivate(get_deri() * exp(input[0]->value()));
-    } else if (operationname == "TANH") {
-        set_deri(deri_value);
-        input[0]->derivate(get_deri() * (1 - input[0]->value() * input[0]->value()));
-    } else if (operationname == "SIGMOID") {
-        set_deri(deri_value);
-        input[0]->derivate(get_deri() * input[0]->value() * (1 - input[0]->value()));
-    } else if (operationname == "PRINT") {
-        set_deri(deri_value);
-        input[0]->derivate(get_deri());
+    set_deri(deri_value);
+    if(set_visit_num()) {
+        if (operationname == "SIN") {
+            input[0]->derivate(get_deri() * cos(input[0]->value()));
+        } else if (operationname == "LOG") {
+            input[0]->derivate(get_deri() / input[0]->value());
+        } else if (operationname == "EXP") {
+            input[0]->derivate(get_deri() * exp(input[0]->value()));
+        } else if (operationname == "TANH") {
+            input[0]->derivate(get_deri() * (1 - input[0]->value() * input[0]->value()));
+        } else if (operationname == "SIGMOID") {
+            input[0]->derivate(get_deri() * input[0]->value() * (1 - input[0]->value()));
+        } else if (operationname == "PRINT") {
+            input[0]->derivate(get_deri());
+        }
     }
 }
 
 void binaryoperation::derivate(double deri_value) {
-    if(!set_visit_num()) {
-        set_deri(deri_value);
-        return ;
-    }
-    if (operationname == "+") {
-        set_deri(deri_value);
-        input[0]->derivate(get_deri() * 1);
-        input[1]->derivate(get_deri() * 1);
-    } else if (operationname == "-") {
-        set_deri(deri_value);
-        input[0]->derivate(get_deri() * 1);
-        input[1]->derivate(get_deri() * -1);
-    } else if (operationname == "*") {
-        set_deri(deri_value);
-        input[0]->derivate(get_deri() * input[1]->value());
-        input[1]->derivate(get_deri() * input[0]->value());
-    } else if (operationname == "/") {
-        input[0]->derivate(get_deri() / input[1]->value());
-        input[1]->derivate(get_deri() * (- input[0]->value() / input[1]->value() / input[1]->value()));
-    } else if (operationname == ">") {
-        
-    } else if (operationname == ">=") {
-         
-    } else if (operationname == "<") {
-        
-    } else if (operationname == "<=") {
-        
-    } else if (operationname == "==") {
-        
+    set_deri(deri_value);
+    if(set_visit_num()) {
+        if (operationname == "+") {
+            input[0]->derivate(get_deri() * 1);
+            input[1]->derivate(get_deri() * 1);
+        } else if (operationname == "-") {
+            input[0]->derivate(get_deri() * 1);
+            input[1]->derivate(get_deri() * -1);
+        } else if (operationname == "*") {
+            input[0]->derivate(get_deri() * input[1]->value());
+            input[1]->derivate(get_deri() * input[0]->value());
+        } else if (operationname == "/") {
+            input[0]->derivate(get_deri() / input[1]->value());
+            input[1]->derivate(get_deri() * (- input[0]->value() / input[1]->value() / input[1]->value()));
+        } else if (operationname == ">") {
+            
+        } else if (operationname == ">=") {
+            
+        } else if (operationname == "<") {
+            
+        } else if (operationname == "<=") {
+            
+        } else if (operationname == "==") {
+            
+        }
     }
 }
 
