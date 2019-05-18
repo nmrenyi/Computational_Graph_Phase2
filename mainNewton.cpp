@@ -12,12 +12,12 @@ int main() {
         int n = 0;  // 方程最高次数n
         std::cin >> n;
         for (int j = 0; j <= n + 1; j++) {
-            int tmp = 0;
+            double tmp = 0.0;
             std::cin >> tmp;
             tmp_equation.push_back(tmp);
         }
         tmp_equation.push_back(n);
-        std::reverse(tmp_equation.begin(), tmp_equation.end() - 1);  // 调换系数的储存顺序，方便按顺序访问
+        std::reverse(tmp_equation.begin(), tmp_equation.end() - 2);  // 调换系数的储存顺序，方便按顺序访问
         equation.push_back(tmp_equation);         
     }
     for (auto x : equation) {

@@ -41,14 +41,30 @@ base* makePlus(std::vector<double> equation, std::map <std::string, base*>& stor
     return (new binaryoperation(prev_name, next_name, "+", store));
 }
 
+void iteration(double initial_value, std::string target, std::map <std::string, base*> store, int m) {
+    if (m == 5) {
+        return;
+    }
+    store["x"]->set(initial_value);
+    store[target]->calculate();
+    double func_value = store[target]->value();
+    store[target]->derivate(1.0);
+    double func_deri_value = store["x"]->get_deri();
+    if (func_deri_value == 0) {
+        std::cout << "Derivation equals to 0, iteration terminated." << std::endl;
+        return;
+    }
+    double new_value = -(func_value / func_deri_value) + store["x"]->value();
+    std::cout << new_value << " ";
+    store[target]->reiscal();
+    iteration(new_value, "result", store, m + 1);
+}
+
 void newtonMethod(std::vector<double> equation) {
     std::map <std::string, base*> store;
     store["x"] = new Placeholder; 
     store["result"] = makePlus(equation, store);
     double initial_value = equation[equation.size() - 2];
-    store["x"]->set(initial_value);
-    store["result"]->calculate();
-    std::cout << std::fixed << std::setprecision(4)
-            << store["result"]->value() << std::endl;
-    // iteration(equation.end() - 2, "result", store, 0);
+    iteration(initial_value, "result", store, 0);
+    std::cout << std::endl;
 }
