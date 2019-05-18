@@ -1,13 +1,17 @@
 all: main1 main2
 # main1 代表能满足实现第一阶段功能的可执行程序
 # main2 代表能满足实现第二阶段功能的可执行程序
-# main3 代表能满足实现最小二乘法功能的可执行程序
+# main3 牛顿迭代法
+# main4 代表能满足实现最小二乘法功能的可执行程序
 
 main1: main.o Input.o Node.o Input.h Node.h
 	g++ -o main1 main.o Input.o Node.o -std=c++14 -Wall
 
 main2: main.o Input.o Node.o Input.h Node.h
 	g++ -o main2 main.o Input.o Node.o -std=c++14 -Wall
+
+main3: mainNewton.o newtonMethod.o Node.o Node.h
+	g++ -o main3 mainNewton.o newtonMethod.o Node.o -std=c++14 -Wall
 
 main.o: main.cpp Input.h Node.h
 	g++ -o main.o -c main.cpp -Wall
@@ -17,6 +21,12 @@ Input.o: Input.cpp Input.h Node.h
 
 Node.o: Node.cpp Node.h
 	g++ -o Node.o -c Node.cpp -Wall
+
+mainNewton.o: mainNewton.cpp Node.h
+	g++ -o mainNewton.o -c mainNewton.cpp -Wall
+
+newtonMethod.o: newtonMethod.cpp Node.h
+	g++ -o newtonMethod.o -c newtonMethod.cpp -Wall
 
 clean_w:
 	del *.exe *.o
