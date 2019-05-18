@@ -11,15 +11,19 @@ class base {
     double output_value;
     bool iscal = false;
     double deri_value = 0; // 导数
+    int pres = 0; // 前驱数目
+    int visit_num = 0; // 访问次数
  public:
     // 给节点赋值，将当前节点修改为已调用
     void set(double x) {
         output_value = x;
         iscal = true;
     }
-    void set_deri(double x) { deri_value += x; }
-    void rederi() { deri_value = 0; }
     double get_deri() { return deri_value; }
+    void set_deri(double x) { deri_value += x; }
+    bool set_visit_num();
+    // 重置导数、前驱导数、前驱数目和访问次数
+    void reset() { deri_value = pres = visit_num = 0; } 
     // 实现抽象类，返回值说明是否能够计算
     // (既返回值为false说明缺少计算所需的参数等而导致没有计算结果)
     virtual bool calculate() = 0;
@@ -38,10 +42,9 @@ class Constant :public base {
 };
 
 class Placeholder :public base {
-
  public:
     Placeholder() {}
-    void derivate(double pre_deri_value) {}; 
+    void derivate(double pre_deri_value); 
     bool calculate();
 };
 
@@ -63,6 +66,7 @@ class singleoperation :public base {
         operationname = b;  // 得到该结点的操作名称
         nodename = a;
     }
+    void derivate(double pre_deri_value);
     bool calculate();
 };
 

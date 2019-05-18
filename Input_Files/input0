@@ -12,5 +12,5 @@ gy = g AT y
 t = gx + gy
 3
 EVAL gx 1 x 3.0
-EVAL gy 1 x 3.0
+EVAL gy 1 y 3.0
 EVAL t 1 x 3.0

@@ -1,0 +1,8 @@
+1
+x P
+3
+a = x + x
+A = GRAD a
+Ax = A AT x
+1
+EVAL Ax 1 x 1.0
