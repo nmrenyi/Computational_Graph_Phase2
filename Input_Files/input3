@@ -1,0 +1,17 @@
+2
+x P
+y P
+11
+t1 = x * y
+tmp1 = x * t1
+t2 = tmp1 + y
+tmp2 = y * t2
+t3 = tmp2 + x
+tmp3 = t1 * t2
+L = tmp3 + t3
+g = GRAD L
+gx = g AT x
+gy = g AT y
+res = gx + gy
+1
+EVAL res 2 x 2.0 y 3.0
