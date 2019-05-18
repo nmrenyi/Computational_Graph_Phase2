@@ -1,4 +1,7 @@
 all: main1 main2
+# main1 代表能满足实现第一阶段功能的可执行程序
+# main2 代表能满足实现第二阶段功能的可执行程序
+# main3 代表能满足实现最小二乘法功能的可执行程序
 
 main1: main.o Input.o Node.o Input.h Node.h
 	g++ -o main1 main.o Input.o Node.o -std=c++14 -Wall
