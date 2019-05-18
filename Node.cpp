@@ -232,6 +232,13 @@ void binaryoperation::derivate(double deri_value) {
     }
 }
 
+void COND::derivate(double deri_value) {
+    set_deri(deri_value);
+    input[0]->derivate(0);
+    input[1]->derivate(input[0]->value() > 0 ? get_deri() : -get_deri());
+    input[2]->derivate(input[0]->value() > 0 ? -get_deri() : get_deri());
+}
+
 void GRAD::derivate(double deri_value) {
     set_deri(deri_value);
     input[0]->derivate(get_deri());
