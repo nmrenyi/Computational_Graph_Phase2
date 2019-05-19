@@ -6,7 +6,7 @@ void newtonMethod(std::vector<double> equation);
 int main() {
     int m = 0;  // m个方程
     std::cin >> m;
-    std::vector<std::vector<double>>equation;
+    std::vector< std::vector<double> >equation;
     for (int i = 0; i < m; i++) {
         std::vector<double> tmp_equation;
         int n = 0;  // 方程最高次数n
@@ -17,8 +17,9 @@ int main() {
             tmp_equation.push_back(tmp);
         }
         tmp_equation.push_back(n);
-        std::reverse(tmp_equation.begin(), tmp_equation.end() - 2);  // 调换系数的储存顺序，方便按顺序访问
-        equation.push_back(tmp_equation);         
+        // 调换系数的储存顺序，方便按顺序访问
+        std::reverse(tmp_equation.begin(), tmp_equation.end() - 2);
+        equation.push_back(tmp_equation);
     }
     for (auto x : equation) {
         newtonMethod(x);
