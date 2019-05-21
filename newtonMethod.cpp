@@ -59,7 +59,7 @@ std::map <std::string, base*> store, int m) {
         return;
     }
     double new_value = -(func_value / func_deri_value) + store["x"]->value();
-    std::cout << new_value << " ";
+    std::cout << std::fixed << std::setprecision(4) << new_value << " ";
     store[target]->reiscal();
     iteration(new_value, "result", store, m + 1);
 }
