@@ -31,7 +31,7 @@ base* makeMulti(double coefficient, int degree, std::map <std::string, base*>& s
 }
 base* makePlus(std::vector<double> equation,
 std::map <std::string, base*>& store) {
-    if (equation.size() == 3) {
+    if (equation.size() == 3) {  // 需要处理的vector是剩下一个系数没有处理了(剩下两个是初始值和最高次数)
         return makeMulti(equation[0], equation[2], store);
     }
     std::string prev_name = "Node" + std::to_string(k++);
@@ -45,7 +45,7 @@ std::map <std::string, base*>& store) {
 
 void iteration(double initial_value, std::string target,
 std::map <std::string, base*> store, int m) {
-    if (m == 5) {
+    if (m == 5) {  // five iteration completed
         return;
     }
     store["x"]->set(initial_value);
