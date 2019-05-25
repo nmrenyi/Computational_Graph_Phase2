@@ -1,2 +1,5 @@
-*.docx
 .vscode
+*.docx
+*.pdf
+*.exe
+*.o

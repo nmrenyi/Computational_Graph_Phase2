@@ -55,34 +55,28 @@ void Inputoperate() {
     std::vector <std::string> buffer;  // 用sstream存储当前输入的关键信息
     getline(std::cin, str);
     std::stringstream ss(str);
-    while (ss >> tmp) {
-        buffer.push_back(tmp);
-    }
+    while (ss >> tmp) { buffer.push_back(tmp); }
 
     // 查找之前是否存在同名结点（指单目、双目等运算符类型）
     // 如果存在，将其push_back进save_for_delete以便后来删除而防止内存泄漏
     if (save.find(buffer[0]) != save.end()) {
         save_for_delete.push_back(save[buffer[0]]);
-    } 
-    // 单目运算符
-    if (buffer.size() == 4) {
+    }
+
+    if (buffer[2] == "GRAD") { // GRAD
+        base* gradname = new GRAD(buffer[3], save);
+        save[buffer[0]] = gradname;
+    } else if (buffer[3] == "AT") { // AT
+        base* atname = new AT(buffer[2], buffer[4], save);
+        save[buffer[0]] = atname;
+    } else if (buffer.size() == 4) { // 单目运算符
         base* singlename = new singleoperation(buffer[3], buffer[2], save);
         save[buffer[0]] = singlename;
-    }
-    // 双目运算符 & BIND
-    if (buffer.size() == 5) {
-        if (buffer[2] != "BIND") { //binary operation but not BIND
-            base* binaryname =
-            new binaryoperation(buffer[2], buffer[4], buffer[3], save);
-            save[buffer[0]] = binaryname;
-        } else { //BIND
-            base* bindname = 
-            new bindoperation(buffer[3], buffer[4], save);
-            save[buffer[0]] = bindname; 
-        }
-    }
-    // COND
-    if (buffer.size() == 6) {
+    } else if (buffer.size() == 5) { // 双目运算符
+        base* binaryname =
+        new binaryoperation(buffer[2], buffer[4], buffer[3], save);
+        save[buffer[0]] = binaryname;
+    } else if (buffer.size() == 6) { // COND
         base* condname =
         new COND(buffer[3], buffer[4], buffer[5], buffer[0], save);
         save[buffer[0]] = condname;

@@ -1,0 +1,47 @@
+4
+x P
+y C 4.0
+z V 0.0
+w V 1.0
+30
+a = x * y
+b = y + z
+c = z * w
+d = EXP a
+e = SIN a
+f = PRINT a
+g = LOG c
+h = f / d
+i = f - g
+j = h * i
+A = GRAD a
+B = GRAD b
+C = GRAD c
+D = GRAD d
+E = GRAD e
+F = GRAD f
+G = GRAD g
+H = GRAD h
+I = GRAD i
+J = GRAD j
+Ax = A AT x
+Bx = B AT x
+Cx = C AT x
+Dx = D AT x
+Ex = E AT x
+Fx = F AT x
+Gx = G AT x
+Hx = H AT x
+Ix = H AT x
+Jx = J AT x
+10
+EVAL Ax 1 x 1.0
+EVAL Bx 1 x 1.0
+EVAL Cx 1 x 1.0
+EVAL Dx 1 x 1.0
+EVAL Ex 1 x 1.0
+EVAL Fx 1 x 1.0
+EVAL Gx 1 x 1.0
+EVAL Hx 1 x 1.0
+EVAL Ix 1 x 1.0
+EVAL Jx 1 x 1.0
