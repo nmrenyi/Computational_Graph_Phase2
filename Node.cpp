@@ -11,7 +11,7 @@ void base::reiscal() {
     iscal = false;
     // 递归调用清空所有被调用节点的计算状态
     // 保证每次执行新的EVAL时结点状态都是未调用
-    for (auto p :input) {
+    for (auto p : input) {
         p->reiscal();
         p->reset();
     }
@@ -19,7 +19,8 @@ void base::reiscal() {
 
 bool base::set_visit_num() {
     visit_num++;
-    if(visit_num == pres) return true;
+    if (visit_num == pres)
+        return true;
     return false;
 }
 
@@ -36,7 +37,7 @@ bool Placeholder::calculate() {
 
 
 bool singleoperation::calculate() {
-    pres++; // 前驱节点数目加一
+    pres++;  // 前驱节点数目加一
     // 判断此节点是否被调用过，保证一个节点只计算一次
     if (iscalculated())
         return true;
@@ -66,8 +67,7 @@ bool singleoperation::calculate() {
             std::cout << "PRINT operator: " << nodename << " = ";
             std::cout << std::fixed << std::setprecision(4)
             << input[0]->value() << std::endl;
-        }
-        if (operationname == "ASSERT") {
+        } else if (operationname == "ASSERT") {
             if (input[0]->value() > 0) {
                 set(0.0);
                 return true;
@@ -83,12 +83,12 @@ bool singleoperation::calculate() {
 }
 
 bool binaryoperation::calculate() {
-    pres++; // 前驱节点数目加一
-    //判断此节点是否被调用过，保证一个节点只计算一次
+    pres++;  // 前驱节点数目加一
+    // 判断此节点是否被调用过，保证一个节点只计算一次
     if (iscalculated())
         return true;
 
-    //判断双目运算符的两个参数是否能够计算
+    // 判断双目运算符的两个参数是否能够计算
     bool flag = (input[0]->calculate()) && (input[1]->calculate());
     if (flag) {
         if (operationname == "+") {
@@ -147,6 +147,7 @@ bool bindoperation::calculate(){
     if (flag) {
         double tmp = input[0]->value();
         set(tmp);
+        return true;
     } else {
         return false;
     }
@@ -254,6 +255,13 @@ void binaryoperation::derivate(double deri_value) {
             input[1]->derivate(get_deri() == 0 ? -get_deri() : get_deri());
         }
     }
+}
+
+void COND::derivate(double deri_value) {
+    set_deri(deri_value);
+    input[0]->derivate(0);
+    input[1]->derivate(input[0]->value() > 0 ? get_deri() : -get_deri());
+    input[2]->derivate(input[0]->value() > 0 ? -get_deri() : get_deri());
 }
 
 void GRAD::derivate(double deri_value) {

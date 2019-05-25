@@ -29,20 +29,23 @@ base* makeMulti(double coefficient, int degree, std::map <std::string, base*>& s
     store[multi_name] = makePower(degree, store);
     return (new binaryoperation(constant, multi_name, "*", store));
 }
-base* makePlus(std::vector<double> equation, std::map <std::string, base*>& store) {
-    if (equation.size() == 3) {
+base* makePlus(std::vector<double> equation,
+std::map <std::string, base*>& store) {
+    if (equation.size() == 3) {  // 需要处理的vector是剩下一个系数没有处理了(剩下两个是初始值和最高次数)
         return makeMulti(equation[0], equation[2], store);
     }
     std::string prev_name = "Node" + std::to_string(k++);
     std::string next_name = "Node" + std::to_string(k++);
-    store[prev_name] = makeMulti(equation[0], equation.back() - (equation.size() - 3), store);
+    store[prev_name] =
+    makeMulti(equation[0], equation.back() - (equation.size() - 3), store);
     equation.erase(equation.begin());
     store[next_name] = makePlus(equation, store);
     return (new binaryoperation(prev_name, next_name, "+", store));
 }
 
-void iteration(double initial_value, std::string target, std::map <std::string, base*> store, int m) {
-    if (m == 5) {
+void iteration(double initial_value, std::string target,
+std::map <std::string, base*> store, int m) {
+    if (m == 5) {  // five iteration completed
         return;
     }
     store["x"]->set(initial_value);
@@ -51,18 +54,19 @@ void iteration(double initial_value, std::string target, std::map <std::string, 
     store[target]->derivate(1.0);
     double func_deri_value = store["x"]->get_deri();
     if (func_deri_value == 0) {
-        std::cout << "Derivation equals to 0, iteration terminated." << std::endl;
+        std::cout << "Derivation equals to 0, iteration terminated."
+        << std::endl;
         return;
     }
     double new_value = -(func_value / func_deri_value) + store["x"]->value();
-    std::cout << new_value << " ";
+    std::cout << std::fixed << std::setprecision(4) << new_value << " ";
     store[target]->reiscal();
     iteration(new_value, "result", store, m + 1);
 }
 
 void newtonMethod(std::vector<double> equation) {
     std::map <std::string, base*> store;
-    store["x"] = new Placeholder; 
+    store["x"] = new Placeholder;
     store["result"] = makePlus(equation, store);
     double initial_value = equation[equation.size() - 2];
     iteration(initial_value, "result", store, 0);

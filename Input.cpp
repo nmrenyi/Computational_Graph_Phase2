@@ -63,20 +63,34 @@ void Inputoperate() {
         save_for_delete.push_back(save[buffer[0]]);
     }
 
-    if (buffer[2] == "GRAD") { // GRAD
+    if (buffer[2] == "GRAD") {  // GRAD
         base* gradname = new GRAD(buffer[3], save);
         save[buffer[0]] = gradname;
-    } else if (buffer[3] == "AT") { // AT
+    } else if (buffer[3] == "AT") {  // AT
         base* atname = new AT(buffer[2], buffer[4], save);
         save[buffer[0]] = atname;
-    } else if (buffer.size() == 4) { // 单目运算符
+    } else if (buffer.size() == 4) {  // 单目运算符
         base* singlename = new singleoperation(buffer[3], buffer[2], save);
         save[buffer[0]] = singlename;
+<<<<<<< HEAD
     } else if (buffer.size() == 5) { // 双目运算符
         base* binaryname =
         new binaryoperation(buffer[2], buffer[4], buffer[3], save);
         save[buffer[0]] = binaryname;
     } else if (buffer.size() == 6) { // COND
+=======
+    } else if (buffer.size() == 5) {  // 双目运算符
+        if (buffer[2] != "BIND") {
+            base* binaryname =
+            new binaryoperation(buffer[2], buffer[4], buffer[3], save);
+            save[buffer[0]] = binaryname;
+        } else {
+            base* bindname =
+            new bindoperation(buffer[3], buffer[4], save);
+            save[buffer[0]] = bindname;
+        }
+    } else if (buffer.size() == 6) {  // COND
+>>>>>>> aa24c72586d0d976644d4ebdca82b36d05e8c8c7
         base* condname =
         new COND(buffer[3], buffer[4], buffer[5], buffer[0], save);
         save[buffer[0]] = condname;

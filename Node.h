@@ -109,6 +109,7 @@ class COND :public base {
         input.push_back(save[c]);
         condname = d;
     }
+    void derivate(double deri_value);
     bool calculate();
 };
 
