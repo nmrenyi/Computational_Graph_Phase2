@@ -67,6 +67,16 @@ bool singleoperation::calculate() {
             std::cout << "PRINT operator: " << nodename << " = ";
             std::cout << std::fixed << std::setprecision(4)
             << input[0]->value() << std::endl;
+        } else if (operationname == "ASSERT") {
+            if (input[0]->value() > 0) {
+                set(0.0);
+                return true;
+            } else {
+                std::cout
+                << "ERROR: Assertion failed"
+                << std::endl;
+                return false;
+            }
         }
         return true;
     }
@@ -124,6 +134,19 @@ bool binaryoperation::calculate() {
             else
                 set(0.0);
         }
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool bindoperation::calculate(){
+    if (iscalculated())
+        return true;
+    bool flag = (input[0]->calculate()) && (input[1]->calculate());
+    if (flag) {
+        double tmp = input[0]->value();
+        set(tmp);
         return true;
     } else {
         return false;

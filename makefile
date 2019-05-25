@@ -1,4 +1,4 @@
-all: main1 main2
+all: main1 main2 main3
 # main1 代表能满足实现第一阶段功能的可执行程序
 # main2 代表能满足实现第二阶段功能的可执行程序
 # main3 牛顿迭代法
@@ -31,8 +31,8 @@ newtonMethod.o: newtonMethod.cpp Node.h
 clean_w:
 	del *.exe *.o
 
-clean_l:
-	rm *.exe *.o
+clean:
+	rm main1 main2 main3 *.o
 
 debug: main.cpp Input.cpp Node.cpp Input.h Node.h
 	g++ -d debug main.cpp Input.cpp Node.cpp -std=c++11 -o main -Wall
