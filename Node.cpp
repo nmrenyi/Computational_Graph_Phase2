@@ -67,6 +67,16 @@ bool singleoperation::calculate() {
             std::cout << "PRINT operator: " << nodename << " = ";
             std::cout << std::fixed << std::setprecision(4)
             << input[0]->value() << std::endl;
+        } else if (operationname == "ASSERT") {
+            if (input[0]->value() > 0) {
+                set(0.0);
+                return true;
+            } else {
+                std::cout
+                << "ERROR: Assertion failed"
+                << std::endl;
+                return false;
+            }
         }
         return true;
     }
@@ -124,6 +134,22 @@ bool binaryoperation::calculate() {
             else
                 set(0.0);
         }
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool bindoperation::calculate(){
+    #ifdef DEBUG
+    std::cout << "hello in bind::cal" << std::endl;
+    #endif
+    if (iscalculated())
+        return true;
+    bool flag = (input[0]->calculate()) && (input[1]->calculate());
+    if (flag) {
+        double tmp = input[0]->value();
+        set(tmp);
         return true;
     } else {
         return false;
@@ -232,6 +258,13 @@ void binaryoperation::derivate(double deri_value) {
             input[1]->derivate(get_deri() == 0 ? -get_deri() : get_deri());
         }
     }
+}
+
+void COND::derivate(double deri_value) {
+    set_deri(deri_value);
+    input[0]->derivate(0);
+    input[1]->derivate(input[0]->value() > 0 ? get_deri() : -get_deri());
+    input[2]->derivate(input[0]->value() > 0 ? -get_deri() : get_deri());
 }
 
 void GRAD::derivate(double deri_value) {

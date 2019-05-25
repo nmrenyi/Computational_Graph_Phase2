@@ -71,6 +71,7 @@ class singleoperation :public base {
     bool calculate();
 };
 
+
 class binaryoperation :public base {  // 双目运算符
     std::string operationname;
  public:
@@ -82,6 +83,20 @@ class binaryoperation :public base {  // 双目运算符
         operationname = c;  // 得到该结点的操作名称
     }
     void derivate(double pre_deri_value);
+    bool calculate();
+};
+
+class bindoperation :public base {  // bind运算
+ public:
+    // 构造函数中通过赋值得到该节点的上一级结点的名称以及运算符并存储起来，以便后来的计算
+    bindoperation(std::string a, std::string b,
+        std::map <std::string, base*>& save) {
+            input.push_back(save[a]);
+            input.push_back(save[b]);
+                #ifdef DEBUG
+                std::cout << "hello in bind::bind" << std::endl;
+                #endif
+        }
     bool calculate();
 };
 
@@ -97,6 +112,7 @@ class COND :public base {
         input.push_back(save[c]);
         condname = d;
     }
+    void derivate(double deri_value);
     bool calculate();
 };
 

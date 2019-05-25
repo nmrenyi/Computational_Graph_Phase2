@@ -73,9 +73,15 @@ void Inputoperate() {
         base* singlename = new singleoperation(buffer[3], buffer[2], save);
         save[buffer[0]] = singlename;
     } else if (buffer.size() == 5) {  // 双目运算符
-        base* binaryname =
-        new binaryoperation(buffer[2], buffer[4], buffer[3], save);
-        save[buffer[0]] = binaryname;
+        if (buffer[2] != "BIND") {
+            base* binaryname =
+            new binaryoperation(buffer[2], buffer[4], buffer[3], save);
+            save[buffer[0]] = binaryname;
+        } else {
+            base* bindname =
+            new bindoperation(buffer[3], buffer[4], save);
+            save[buffer[0]] = bindname;
+        }
     } else if (buffer.size() == 6) {  // COND
         base* condname =
         new COND(buffer[3], buffer[4], buffer[5], buffer[0], save);
