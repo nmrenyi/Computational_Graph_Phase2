@@ -1,3 +1,2 @@
-operatenum = 2
-hello in afterinputoperation
-str = EVAL b 1 x 2.0
+3.0000
+ERROR: Assertion failed
