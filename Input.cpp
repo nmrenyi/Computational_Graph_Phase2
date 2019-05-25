@@ -15,6 +15,9 @@ std::map <int, double> answer;
 std::vector <base*> save_for_delete;
 
 void InputNode() {
+    #ifdef DEBUG
+    std::cout << "hello in bind::node" << std::endl;
+    #endif
     std::string name;
     char type;
     std::cin >> name;
@@ -53,16 +56,17 @@ void Inputoperate() {
     std::string str;
     std::string tmp;
     std::vector <std::string> buffer;  // 用sstream存储当前输入的关键信息
-    getline(std::cin, str);
+    std::getline(std::cin, str);
     std::stringstream ss(str);
-    while (ss >> tmp) { buffer.push_back(tmp); }
-
+    ss >> tmp;
+    while (ss >> tmp) { 
+        buffer.push_back(tmp); 
+    }
     // 查找之前是否存在同名结点（指单目、双目等运算符类型）
     // 如果存在，将其push_back进save_for_delete以便后来删除而防止内存泄漏
     if (save.find(buffer[0]) != save.end()) {
         save_for_delete.push_back(save[buffer[0]]);
     }
-
     if (buffer[2] == "GRAD") {  // GRAD
         base* gradname = new GRAD(buffer[3], save);
         save[buffer[0]] = gradname;
@@ -72,13 +76,6 @@ void Inputoperate() {
     } else if (buffer.size() == 4) {  // 单目运算符
         base* singlename = new singleoperation(buffer[3], buffer[2], save);
         save[buffer[0]] = singlename;
-<<<<<<< HEAD
-    } else if (buffer.size() == 5) { // 双目运算符
-        base* binaryname =
-        new binaryoperation(buffer[2], buffer[4], buffer[3], save);
-        save[buffer[0]] = binaryname;
-    } else if (buffer.size() == 6) { // COND
-=======
     } else if (buffer.size() == 5) {  // 双目运算符
         if (buffer[2] != "BIND") {
             base* binaryname =
@@ -90,7 +87,6 @@ void Inputoperate() {
             save[buffer[0]] = bindname;
         }
     } else if (buffer.size() == 6) {  // COND
->>>>>>> aa24c72586d0d976644d4ebdca82b36d05e8c8c7
         base* condname =
         new COND(buffer[3], buffer[4], buffer[5], buffer[0], save);
         save[buffer[0]] = condname;
@@ -106,6 +102,7 @@ void Inputevalnum(int answer_num) {
     while (ss >> tmp) {
         buffer.push_back(tmp);
     }
+    std::cout << "str = " << str << std::endl;
     if (buffer[0] == "EVAL") {
         std::string target = buffer[1];
         if (buffer.size() == 2) {  //如果直接输出某结点而不赋值

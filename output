@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-5.0000
-ERROR: Placeholder missing
-6.0000
-=======
->>>>>>> aa24c72586d0d976644d4ebdca82b36d05e8c8c7
+operatenum = 2
+hello in afterinputoperation
+str = EVAL b 1 x 2.0

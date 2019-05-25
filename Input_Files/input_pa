@@ -1,14 +1,8 @@
-4
-x P
-y P
-z C 3.0
-t C 2.0
-5
-a = x + y
-b = x + t
-d = b - y
-c = ASSERT d
-res = BIND a c
 2
-EVAL res 2 x 1.0 y 2.0
-EVAL res 2 x 1.0 y 4.0
+x P
+y C 3.0
+2
+a = x > y
+b = ASSERT a
+1
+EVAL b 1 x 2.0
