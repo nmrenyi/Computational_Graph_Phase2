@@ -8,7 +8,7 @@ main1: main.o Input.o Node.o Input.h Node.h
 	g++ -o main1 main.o Input.o Node.o -std=c++14 -Wall
 
 main2: main.o Input.o Node.o Input.h Node.h
-	g++ -o main2 main.o Input.o Node.o -std=c++14 -Wall
+	g++ -D DEBUG -o main2 main.o Input.o Node.o -std=c++14 -Wall
 
 main3: mainNewton.o newtonMethod.o Node.o Node.h
 	g++ -o main3 mainNewton.o newtonMethod.o Node.o -std=c++14 -Wall

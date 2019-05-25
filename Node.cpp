@@ -141,6 +141,9 @@ bool binaryoperation::calculate() {
 }
 
 bool bindoperation::calculate(){
+    #ifdef DEBUG
+    std::cout << "hello in bind::cal" << std::endl;
+    #endif
     if (iscalculated())
         return true;
     bool flag = (input[0]->calculate()) && (input[1]->calculate());
