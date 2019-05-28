@@ -4,18 +4,34 @@
 #include<map>
 #include<iomanip>
 #include<iostream>
-int k = 0;  // 命名计数器
+class Counter {
+ private:
+    int count;
+    Counter() { count = 0; }
+    Counter(const Counter&) = delete;
+    void operator= (const Counter&) = delete;
+    ~Counter() {}
+ public:
+    static Counter& instance() {
+        static Counter _instance;
+        return _instance;
+    }
+    void addCount() { count++; }
+    int getCount() { return count; }
+};
+// int k = 0;  // 命名计数器
 
-base* makePower(int degree, std::map <std::string, base*>& store) {
+base* makePower(int degree, std::map <std::string, base*>& store, Counter& c) {
     if (degree == 1) {
         return store["x"];
     }
-    std::string next_name = "Multi" + std::to_string(k++);
-    store[next_name] = makePower(degree - 1, store);
+    c.addCount();
+    std::string next_name = "Multi" + std::to_string(c.getCount());
+    store[next_name] = makePower(degree - 1, store, c);
     return (new binaryoperation("x", next_name, "*", store));
 }
 
-base* makeMulti(double coefficient, int degree, std::map <std::string, base*>& store) {
+base* makeMulti(double coefficient, int degree, std::map <std::string, base*>& store, Counter& c) {
 
     if (degree == 0) {
         base* tmp = new Constant;
@@ -25,21 +41,24 @@ base* makeMulti(double coefficient, int degree, std::map <std::string, base*>& s
     std::string constant = std::to_string(coefficient);
     store[constant] = new Constant;
     store[constant]->set(coefficient);
-    std::string multi_name = "Multi" + std::to_string(k++);
-    store[multi_name] = makePower(degree, store);
+    c.addCount();
+    std::string multi_name = "Multi" + std::to_string(c.getCount());
+    store[multi_name] = makePower(degree, store, c);
     return (new binaryoperation(constant, multi_name, "*", store));
 }
 base* makePlus(std::vector<double> equation,
-std::map <std::string, base*>& store) {
+std::map <std::string, base*>& store, Counter& c) {
     if (equation.size() == 3) {  // 需要处理的vector是剩下一个系数没有处理了(剩下两个是初始值和最高次数)
-        return makeMulti(equation[0], equation[2], store);
+        return makeMulti(equation[0], equation[2], store, c);
     }
-    std::string prev_name = "Node" + std::to_string(k++);
-    std::string next_name = "Node" + std::to_string(k++);
+    c.addCount();
+    std::string prev_name = "Node" + std::to_string(c.getCount());
+    c.addCount();
+    std::string next_name = "Node" + std::to_string(c.getCount());
     store[prev_name] =
-    makeMulti(equation[0], equation.back() - (equation.size() - 3), store);
+    makeMulti(equation[0], equation.back() - (equation.size() - 3), store, c);
     equation.erase(equation.begin());
-    store[next_name] = makePlus(equation, store);
+    store[next_name] = makePlus(equation, store, c);
     return (new binaryoperation(prev_name, next_name, "+", store));
 }
 
@@ -65,9 +84,10 @@ std::map <std::string, base*> store, int m) {
 }
 
 void newtonMethod(std::vector<double> equation) {
+    Counter& c = Counter::instance();
     std::map <std::string, base*> store;
     store["x"] = new Placeholder;
-    store["result"] = makePlus(equation, store);
+    store["result"] = makePlus(equation, store, c);
     double initial_value = equation[equation.size() - 2];
     iteration(initial_value, "result", store, 0);
     std::cout << std::endl;

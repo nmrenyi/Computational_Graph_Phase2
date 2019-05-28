@@ -1,4 +1,4 @@
-all: main1 main2
+all: main1 main2 main3
 # main1 代表能满足实现第一阶段功能的可执行程序
 # main2 代表能满足实现第二阶段功能的可执行程序
 # main3 牛顿迭代法
