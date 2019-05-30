@@ -97,6 +97,7 @@ class bindoperation :public base {  // bind运算
                 std::cout << "hello in bind::bind" << std::endl;
                 #endif
         }
+    void derivate(double pre_deri_value);
     bool calculate();
 };
 

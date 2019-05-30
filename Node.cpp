@@ -221,6 +221,13 @@ void singleoperation::derivate(double deri_value) {
             input[0]->derivate(get_deri() * input[0]->value() * (1 - input[0]->value()));
         } else if (operationname == "PRINT") {
             input[0]->derivate(get_deri());
+        } else if (operationname == "ASSERT") {
+            if(input[0]->value() > 0) input[0]->derivate(get_deri() * 1.0);
+            else {
+                std::cout
+                << "ERROR: Assertion failed"
+                << std::endl;
+            }
         }
     }
 }
@@ -258,6 +265,12 @@ void binaryoperation::derivate(double deri_value) {
             input[1]->derivate(get_deri() == 0 ? -get_deri() : get_deri());
         }
     }
+}
+
+void bindoperation::derivate(double deri_value) {
+    set_deri(deri_value);
+    input[0]->derivate(get_deri());
+    input[1]->derivate(1.0);
 }
 
 void COND::derivate(double deri_value) {
