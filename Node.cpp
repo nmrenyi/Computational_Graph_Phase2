@@ -141,15 +141,29 @@ bool binaryoperation::calculate() {
 }
 
 bool bindoperation::calculate(){
-    #ifdef DEBUG
-    std::cout << "hello in bind::cal" << std::endl;
-    #endif
     if (iscalculated())
         return true;
     bool flag = (input[0]->calculate()) && (input[1]->calculate());
     if (flag) {
         double tmp = input[0]->value();
         set(tmp);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool AssignOperation::calculate(){
+    #ifdef DEBUG
+    std::cout << "hello in assign::cal" << std::endl;
+    #endif
+    if (iscalculated())
+        return true;
+    bool flag = input[1]->calculate();
+    if (flag) {
+        double tmp = input[1]->value();
+        set(tmp);
+        input[0]->set(tmp); 
         return true;
     } else {
         return false;
