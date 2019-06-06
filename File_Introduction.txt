@@ -1,0 +1,54 @@
+OOP大作业计算图第一阶段说明文档
+
+一、总体文件构成：
+1.main.cpp:体现了整个计算图的流程：构建初始变量结点、构建运算符结点、进行变量值的赋值和预期结点的输出、释放内存。
+2.Node.h和Node.cpp：我们实现的类的定义和函数的实现。
+3.Input.h和Input.cpp：读入输出功能的具体实现。
+
+二、各个文件中含有的函数功能：
+1.Node：                                                               
+基类base：protected元素：
+①vector<base*>类型的input：储存了计算这个节点所需要的上一级节点。（若上级不需要结点，则为空）
+②output_value：来记录当前节点的值。
+③bool类型iscal：记录这个节点是否被计算过，用来实现每个节点只计算一次的功能。
+public函数：（简单函数直接在类定义的时候实现，复杂的在Node.cpp里实现）
+①set函数：修改结点值的外界接口，保证了封装性。传入一个double，将output_value赋值为传入值，并更改iscal显示已经计算过。
+②bool类型的calculate纯虚函数：实现抽象类，在接下来的public派生类中具体实现计算功能，返回值说明是否能够计算（既返回值为false说明缺少计算所需的参数等而导致没有计算结果）
+③reiscal负责在某次赋值运算完后刷新节点的状态，便于下一次赋不同的值参与运算，保证运算结果的独立性与正确性。
+⑤value函数：返回output_value的值，确保类的封装性。
+⑥bool类型的iscalculated函数：返回iscal的值，保证类的封装性
+虚析构函数：保证最后删除base*的指针时正确调用派生类自己的析构函数
+
+2.public继承base类的6个派生类：                                 
+介绍派生类之前介绍一下其中用到的save：表示string到base*的映射map。储存最新的string到base*的映射关系。（最新的结点到base*的映射，同名结点的情况在后面说明）
+①Constant表示常量：因为Constant一定有值，calculate函数一直返回true。
+②Placeholder表示占位符：其中的calculate函数判断iscal的值，若为true则返回true（表示在本轮计算中已经赋值），否则未计算过输出ERROR: Placeholder missing。
+③Variable类代表变量。其中的calculate函数直接返回true，类似于Constant,但Variable可以通过操作Setconstant改变值，而Constant不可以。
+④singleoperation表示单目运算符：其中加入string类型的成员operationname记录单目运算的名称。构造函数时例如b=sin a, operationname记录sin，把a对应的base*放到新节点的input里，之后建立b到new出来的新base*的映射；Calculate函数中先判断是否计算过，如果计算过则直接返回true，保证一个节点只计算一次。再判断input里的base*指向的calculate函数是否可以计算，形成递归。若不可计算则返回false，否则根据operationname里记录的单目运算符调用input里base*指向的上一级的值进行计算，用set函数进行赋值。
+⑤binaryoperation表示双目运算符类：新增operationname记录+、-等得到当前结点的运算符，在构造函数时记录运算符，并将运算符前后的string对应的base*（即得到当前结点的上一级结点）存到input里，之后建立新节点名字的string到new出来的base*的映射。Calculate函数中先判断是否计算过，保证只计算一次。再调用两个input指针指向的calculate函数，判断是否可计算。不可计算则返回false，否则分别调用input里两个base*指向的output_value值按照储存的双目运算符名进行计算，将得到的值通过set函数赋值。
+⑥COND类代表其中的cond运算。新增condname记录节点名字，将三个base*储存到input里。Calculate函数中先判断是否调用过，保证只计算一次。再判断第一个节点是否可计算，若其值大于零，则判断第二个节点是否可计算，如可以调用其set赋值，不可以则返回false。小于等于零时同理。
+Input.h是对Input.cpp里函数的声明。Input.cpp里具体有四个函数，第一个函数InputNode负责第一部分n个变量的读入，即Placeholder、Constant类型的读入，第二个函数Inputoperate负责m个节点的读入完成计算图框架的构建，第三个函数Inputevalnum负责q个操作的读入和实现，第四个函数delete_memory负责最后释放new出来的内存。
+
+3.Input文件中函数的具体实现：                                      
+ 	①InputNode函数：在读入时首先读入n代表n个变量，从1到n遍历调用InputNode函数n次。在InputNode函数中先cin变量名称，再cin变量类型。根据不同的变量类型，new出不同的类（C,V,Placeholder），填入map中，建立映射关系。
+ ②Inputoperate函数：再读入m代表m个节点，从1到m遍历调用Inputoperate函数进行计算图的建立。用getline读入一行储存再str字符串内，再用stringstream将str一一读出到一个vector中（在此步骤之前有一个细节，使用getline函数之前要先用一个getchar将换行符吸收，保证函数的正常运行）。根据vector的size判断出是单目、双目还是cond运算符，分别new出不同类型的类 (singleoperation,binaryoperation,COND)进行初始化。
+ ③Inputevalnum函数：读入q代表q个操作，同样用getline将一行读入到str字符串中，用stringstream将字符串str按空格为界分开存储到名为buffer的vector<string>里。如果buffer[0]为EVAL,说明要计算接下来给出的结点名称的值。然后就是先判断是否有给那些需要赋值的P、V类型的节点赋值，此时可能没有赋值语句，这种情况下需要判断此节点是否能够计算，是否有输出值，即调用calculate函数来判断。如果有赋值语句，先进行赋值，随后判断能否输出。接下来的细节就是调用刷新结点调用状态的函数，因为每个EVAL之间是相互独立的，上一次的不刷新会对下次的计算结果造成影响。为了保证之后的SETANSWER的操作的顺利执行，在每次EVAL能够输出结果时，将其放入一个map映射中。如果buffer[0]是SETCONSTANT，就按照要求将其赋值。如果是SETANSWER，就使用之前的map结构将其赋值。此时因为没有调用结点计算，因此不需要刷新结点的状态。
+	④delete_memory函数：释放内存的操作。具体原理说明在后面有。
+至此，程序完全结束。
+
+三、重要功能实现的原理解读：
+1.关于重名结点的建立的问题： 
+如果后来命名重名结点，在我们的save中，该名字对应的的base*会发生变化，原来的会被覆盖，但是并不会被消除。由于在同名结点命名之前，我们已经将其存储在base*对应的派生类中的vector <base*> input中，而input指向的base*指针不会改变，因此重名结点不会影响到计算结果的正确性。
+例：结点：A=w/w
+			B=A+A
+			A=w+w
+这样的样例中计算B时，A代表的是第一个A而不是第二个A，在我们的input存的也正是这种情况，保证了正确性。
+
+2.关于计算功能的实现：
+计算功能的实现本质上就是每个节点存着上一级结点的名称以及上级结点得到下级结点的操作名，计算时，通过递归计算，即得到这一结点，要得到上一结点的值，这样会执行上一结点的计算函数，这样进行递归调用，直到达到第一层结点（即C、P、V三种类型结点），这样便可最终得到结果（如果没有值则在递归调用过程中会输出错误信息，返回false并且终止递归调用）
+
+3.关于刷新结点状态的问题：
+原理与上个问题相似，也是通过递归调用上一级节点的reiscal来更新状态，直到达到第一层结点。（通过input里的指针来判断上一结点，同样不用担心重名结点的问题）
+
+4.关于内存是否被完全释放的问题：
+经由上述分析，程序运行到最后，有两种内存等待释放：一、程序运行到最后时，save的定义域指向的值域的base派生类，这种直接for循环一下save，将其delete即可。二、程序运行过程中因为同名结点的情况，导致save中一开始的那个结点被覆盖，不被save定义域中的元素指向，为了方便这种内存的释放，我们在每次新节点产生之前，判断之前是否有同名结点，如果存在同名结点，就将原来的结点指向的base派生类push进入新建的vector中，每个新的结点赋值之前都这样判断一下，所以最后vector中的元素都是new的base派生类里不被save最终指向的内存，程序最后将vector中的全部删掉就将所有临时申请的内存全部释放，因此不会造成内存泄漏。
