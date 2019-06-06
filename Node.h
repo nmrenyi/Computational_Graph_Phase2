@@ -97,9 +97,9 @@ class bindoperation :public base {  // bind运算
     bool calculate();
 };
 
-class assignoperation :public base { //assign操作
+class AssignOperation :public base {  // assign操作
  public:
-    assignoperation(std::string a, std::string b,
+    AssignOperation(std::string a, std::string b,
         std::map <std::string, base*>& save) {
                 #ifdef DEBUG
                 std::cout << "worinimademamaipi" << std::endl;

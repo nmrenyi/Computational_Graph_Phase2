@@ -153,7 +153,7 @@ bool bindoperation::calculate(){
     }
 }
 
-bool assignoperation::calculate(){
+bool AssignOperation::calculate(){
     #ifdef DEBUG
     std::cout << "hello in assign::cal" << std::endl;
     #endif

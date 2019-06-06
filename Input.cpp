@@ -78,9 +78,9 @@ void Inputoperate() {
             new bindoperation(buffer[3], buffer[4], save);
             save[buffer[0]] = bindname;
         } else if (buffer[2] == "ASSIGN") { ////IIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
-            base* assignname =
-            new assignoperation(buffer[3], buffer[4], save);
-            save[buffer[0]] = assignname;///iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
+            base* assignName =
+            new AssignOperation(buffer[3], buffer[4], save);
+            save[buffer[0]] = assignName;///iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii
         } else {
             base* binaryname =
             new binaryoperation(buffer[2], buffer[4], buffer[3], save);
