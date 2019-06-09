@@ -1,4 +1,4 @@
-all: main1 main2 main3
+all: main1 main2 main3 main4
 # main1 代表能满足实现第一阶段功能的可执行程序
 # main2 代表能满足实现第二阶段功能的可执行程序
 # main3 牛顿迭代法
@@ -12,6 +12,9 @@ main2: main.o Input.o Node.o Input.h Node.h
 
 main3: mainNewton.o newtonMethod.o Node.o Node.h
 	g++ -o main3 mainNewton.o newtonMethod.o Node.o -std=c++14 -Wall
+
+main4: mainTensor.o Tensor.h
+	g++ -o main4 mainTensor.o -std=c++14 -Wall
 
 main.o: main.cpp Input.h Node.h
 	g++ -o main.o -c main.cpp -Wall
@@ -27,6 +30,9 @@ mainNewton.o: mainNewton.cpp Node.h
 
 newtonMethod.o: newtonMethod.cpp Node.h
 	g++ -o newtonMethod.o -c newtonMethod.cpp -Wall
+
+mainTensor.o: mainTensor.cpp
+	g++ -o mainTensor -c mainTensor.cpp -Wall
 
 clean_w:
 	del *.exe *.o
