@@ -93,8 +93,18 @@ class bindoperation :public base {  // bind运算
         std::map <std::string, base*>& save) {
             input.push_back(save[a]);
             input.push_back(save[b]);
+    }
+    bool calculate();
+};
+
+class AssignOperation :public base {  // assign操作
+ public:
+    AssignOperation(std::string a, std::string b,
+        std::map <std::string, base*>& save) {
+            input.push_back(save[a]);
+            input.push_back(save[b]);
                 #ifdef DEBUG
-                std::cout << "hello in bind::bind" << std::endl;
+                std::cout << "hello in assign::assign" << std::endl;
                 #endif
         }
     void derivate(double pre_deri_value);

@@ -73,14 +73,18 @@ void Inputoperate() {
         base* singlename = new singleoperation(buffer[3], buffer[2], save);
         save[buffer[0]] = singlename;
     } else if (buffer.size() == 5) {  // 双目运算符
-        if (buffer[2] != "BIND") {
-            base* binaryname =
-            new binaryoperation(buffer[2], buffer[4], buffer[3], save);
-            save[buffer[0]] = binaryname;
-        } else {
+        if (buffer[2] == "BIND") {
             base* bindname =
             new bindoperation(buffer[3], buffer[4], save);
             save[buffer[0]] = bindname;
+        } else if (buffer[2] == "ASSIGN") {  // ASSIGN 操作
+            base* assignName =
+            new AssignOperation(buffer[3], buffer[4], save);
+            save[buffer[0]] = assignName;
+        } else {
+            base* binaryname =
+            new binaryoperation(buffer[2], buffer[4], buffer[3], save);
+            save[buffer[0]] = binaryname;
         }
     } else if (buffer.size() == 6) {  // COND
         base* condname =
