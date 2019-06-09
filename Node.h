@@ -108,7 +108,7 @@ class AssignOperation :public base {  // assign操作
                 std::cout << "hello in assign::assign" << std::endl;
                 #endif
         }
-    void derivate(double pre_deri_value);
+    // void derivate(double pre_deri_value);
     bool calculate();
 };
 
