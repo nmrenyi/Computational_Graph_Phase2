@@ -58,9 +58,11 @@ TensorBinaryOperation::TensorBinaryOperation(std::string target1, std::string ta
 }
 
 bool TensorBinaryOperation::calculate() {
+    // 判断此节点是否被调用过,保证每个节点值
     if (calculated) {
         return true;
     }
-    
+
+
     return true;
 }
