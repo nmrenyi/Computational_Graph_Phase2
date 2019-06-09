@@ -95,6 +95,7 @@ class bindoperation :public base {  // bind运算
             input.push_back(save[b]);
     }
     bool calculate();
+    void derivate(double pre_deri_value);    
 };
 
 class AssignOperation :public base {  // assign操作
