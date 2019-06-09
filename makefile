@@ -3,6 +3,8 @@ all: main1 main2 main3
 # main2 代表能满足实现第二阶段功能的可执行程序
 # main3 牛顿迭代法
 # main4 代表能满足实现最小二乘法功能的可执行程序
+# main5 代表session试验版本
+# g++ main.cpp Input.cpp Node.cpp -o main1 -std=c++14 -Wall
 
 main1: main.o Input.o Node.o Input.h Node.h
 	g++ -o main1 main.o Input.o Node.o -std=c++14 -Wall
@@ -12,6 +14,9 @@ main2: main.o Input.o Node.o Input.h Node.h
 
 main3: mainNewton.o newtonMethod.o Node.o Node.h
 	g++ -o main3 mainNewton.o newtonMethod.o Node.o -std=c++14 -Wall
+
+main5: Ses_main.cpp Session.cpp Node.o Session.h Input.h Node.h
+	g++ -o main5 Ses_main.cpp Session.cpp Node.o -std=c++14 -Wall
 
 main.o: main.cpp Input.h Node.h
 	g++ -o main.o -c main.cpp -Wall
