@@ -47,12 +47,6 @@ void InputNode(std::map<std::string, Tensor*>& save) {
         dim.push_back(tmp);
     }
 
-    // 查找之前是否存在同名结点(指最开始的C、P、V类型)
-    // 如果存在，将其push_back进save_for_delete以便后来删除而防止内存泄漏
-    // if (save.find(name) != save.end()) {
-    //     save_for_delete.push_back(save[name]);
-    // }
-
     switch (type) {  //判断输入的变量的类型
         case 'P': {
             Tensor* Newplace = new TensorPlaceholder(dim);
@@ -94,12 +88,6 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
     getline(std::cin, str);
     std::stringstream ss(str);
     while (ss >> tmp) { buffer.push_back(tmp); }
-
-    // 查找之前是否存在同名结点（指单目、双目等运算符类型）
-    // 如果存在，将其push_back进save_for_delete以便后来删除而防止内存泄漏
-    // if (save.find(buffer[0]) != save.end()) {
-    //     save_for_delete.push_back(save[buffer[0]]);
-    // }
 
     if (buffer.size() == 4) {  // a = SIN x 单目运算符
         Tensor* single = new TensorSingleOperation(buffer[3], buffer[2], save);
