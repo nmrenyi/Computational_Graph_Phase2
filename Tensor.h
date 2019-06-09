@@ -2,16 +2,13 @@
 #include <map>
 #include <string>
 
-class BaseTensor {
- private:
-    std::vector<Tensor*> input;
-    std::vector<double> data;  // 储存Tensor内部的所有值
-    std::vector<int>dim;  // 每一维的大小
-};
+
 
 class Tensor {
  protected:
-    BaseTensor baseTensor;
+    std::vector<Tensor*> input;
+    std::vector<double> data;  // 储存Tensor内部的所有值
+    std::vector<int>dim;  // 每一维的大小
     bool calculated = 0;
  public:
     Tensor();
