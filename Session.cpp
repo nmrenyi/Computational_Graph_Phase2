@@ -18,20 +18,16 @@ Session::~Session() {
 }
 
 void Session::Make_Graph() {
-    int Nodenum = 0, operatenum = 0, evalnum = 0;
-    in >> Nodenum;
+    int Nodenum, operatenum;
+    in >> Nodenum; 
     for (int i = 1; i <= Nodenum; i++) {  // 构建变量结点
         Ses_InputNode();
     }
     in >> operatenum;
-    getchar();  // 吸收operatenum后的换行符
+    std::string str;
+    getline(in, str); // 吸收换行符
     for (int i = 1; i <= operatenum; i++) {  // 构建运算符结点
         Ses_Inputoperate();
-    }
-    in >> evalnum;
-    getchar();  // 吸收evalnum后的换行符
-    for (int i = 1; i <= evalnum; i++) {  //进行输出运算操作
-        Ses_Inputevalnum(i);
     }
 }
 
@@ -116,14 +112,16 @@ void Session::Ses_Inputoperate() {
 
 int Session::Ses_Inputevalnum(int answer_num) {
     std::string str;
-    std::string tmp;
     std::vector<std::string> buffer;
-    getline(in, str);
-    std::stringstream ss(str);
-    while (ss >> tmp) {
-        buffer.push_back(tmp);
-    }
+    std::cin >> str;
+    buffer.push_back(str);
     if (buffer[0] == "EVAL") {
+        std::string tmp;
+        getline(std::cin, str);
+        std::stringstream ss(str);
+        while (ss >> tmp) {
+            buffer.push_back(tmp);
+        }
         std::string target = buffer[1];
         if (buffer.size() == 2) {  //如果直接输出某结点而不赋值
             if (save[target]->calculate()) {
@@ -160,7 +158,6 @@ int Session::Ses_Inputevalnum(int answer_num) {
     }
     return 1;
 }
-
 
 void Session::Ses_delete_memory() {
     for (auto it = save.begin(); it != save.end(); it++) {

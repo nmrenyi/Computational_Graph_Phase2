@@ -145,7 +145,7 @@ int main() {
     for (int i = 1; i <= Nodenum; i++) {  // 构建变量结点
         InputNode();
     }
-    std::cin >> operatenum; d_Ses.in << Nodenum << "\n";
+    std::cin >> operatenum; d_Ses.in << operatenum << "\n";
     getchar();  // 吸收operatenum后的换行符
     for (int i = 1; i <= operatenum; i++) {  // 构建运算符结点
         Inputoperate();
@@ -160,6 +160,7 @@ int main() {
         std::map<std::string, Session*> my_ses;
         int i = 0;
         Session* Now_Ses = &d_Ses;
+        my_ses["default_session"] = Now_Ses;
         while(1) {
             int check = Now_Ses->Ses_Inputevalnum(i++);
             if(!check) break;
@@ -188,6 +189,6 @@ int main() {
             }
         }
     }
-    delete_memory();  // 释放内存
+    // delete_memory();  // 释放内存
     return 0;
 }
