@@ -1,5 +1,6 @@
-#include<vector>
-#include<string>
+#include <vector>
+#include <map>
+#include <string>
 class Tensor {
  protected:
     std::vector<Tensor*> input;
@@ -7,7 +8,7 @@ class Tensor {
     std::vector<int>dim;  // 每一维的大小
  public:
     Tensor(){}
-    virtual ~Tensor() = 0;
+    virtual ~Tensor() {};
 };
 
 class TensorConstant : public Tensor {
