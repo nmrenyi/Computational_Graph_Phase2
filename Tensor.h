@@ -14,7 +14,10 @@ class Tensor {
     void initialize();  // 使节点都定义为未调用       
     virtual bool calculate() = 0;  // 是否可算,并且在此过程中进行计算
     void display();
+    void setData(std::vector<double>);
+    std::vector<double> getData();
     virtual ~Tensor();
+
 };
 
 class TensorConstant : public Tensor {
@@ -53,5 +56,5 @@ class TensorBinaryOperation : public Tensor {
     TensorBinaryOperation(std::string target1, std::string target2, std::string operatorName, std::vector<int>dimInfo, std::map<std::string, Tensor*>& save);
     bool broadcastable(); 
     bool calculate();
-    bool checkBroadcastable(Tensor*, Tensor*);
+   //  bool checkBroadcastable(Tensor*, Tensor*);
 };

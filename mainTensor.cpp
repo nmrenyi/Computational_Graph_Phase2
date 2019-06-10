@@ -8,8 +8,11 @@
 #include<algorithm>
 
 
-void Inputoperate(std::map<std::string, Tensor*>& save);
-void InputNode(std::map<std::string, Tensor*>& save);
+void Inputoperate(std::map<std::string, Tensor*>&);
+void InputNode(std::map<std::string, Tensor*>&);
+void Inputevalnum(int, std::map<std::string, Tensor*>&);
+void changePara(std::map<std::string, Tensor*>& save, std::string info);
+
 
 int main() {
     std::map<std::string, Tensor*> save;
@@ -26,7 +29,7 @@ int main() {
     std::cin >> evalnum;
     getchar();  // 吸收evalnum后的换行符
     for (int i = 1; i <= evalnum; i++) {  //进行输出运算操作
-        Inputevalnum(i);
+        Inputevalnum(i, save);
     }
     return 0;
 }
@@ -43,10 +46,10 @@ void InputNode(std::map<std::string, Tensor*>& save) {
     char type;
     int dimNum = 0;
     std::vector<int>dim;
-    std::cin >> name >> type >> dimNum;
+    std::cin >> name >> type >> dimNum;  // x P 2  分别是节点名字，属性，共有的维数
     for (int i = 0; i < dimNum; i++) {
         int tmp = 0;
-        std::cin >> tmp;
+        std::cin >> tmp;  // 2 1  分别是每一维的长度
         dim.push_back(tmp);
     }
 
@@ -58,7 +61,7 @@ void InputNode(std::map<std::string, Tensor*>& save) {
         break;
         case 'C': {
             std::vector<double>data;
-            int dataNum = getDataNum(dim);
+            int dataNum = getDataNum(dim);  // 这里可以换用lamda表达式！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
             for (int i = 0; i < dataNum; i++) {
                 double tmp = 0;
                 std::cin >> tmp;
@@ -91,11 +94,11 @@ std::pair<bool, std::vector<int>> checkBroadcast(Tensor* ptr1, Tensor* ptr2) {
     for (int i = 1; i <= dimMin; i++) {
         int length1 = *(dim1.end() - i);
         int length2 = *(dim2.end() - i);
-        tmp.push_back(std::max(length1, length2));
+        tmp.push_back(std::max(length1, length2));  // 倒序将合成节点的维数加入vector
         if (length1 != length2 && length1 != 1 && length2 != 1)
-            return std::make_pair(false, tmp);
+            return std::make_pair(false, tmp);  // 若发现不可broadcast，直接返回第一个值是false的pair
     }
-    std::reverse(tmp.begin(), tmp.end());
+    std::reverse(tmp.begin(), tmp.end());  // 将倒序的vector反过来
     return std::make_pair(true, tmp);
 }
 
@@ -112,7 +115,7 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
         save[buffer[0]] = single;
     }
     else if (buffer.size() == 5) {  // a = x + y 双目运算符
-        std::pair<bool, vector<int>> check = checkBroadcast(save[buffer[2]], save[buffer[4]]);
+        auto check = checkBroadcast(save[buffer[2]], save[buffer[4]]);
         if (check.first) {
             Tensor* binary =
             new TensorBinaryOperation(buffer[2], buffer[4], buffer[3], check.second, save);
@@ -128,47 +131,73 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
 
 
 
-void Inputevalnum(int answer_num) {
+void Inputevalnum(int answer_num, std::map<std::string, Tensor*>& save) {
     std::string str;
     std::string tmp;
-    std::vector<std::string> buffer;
-    getline(std::cin, str);
+    std::vector<std::string> buffer;  // buffer为储存赋值运算的vector
+    getline(std::cin, str, '#');  // EVAL a 1 x 1 2 # y 2 1 #
     std::stringstream ss(str);
     while (ss >> tmp) {
         buffer.push_back(tmp);
     }
+
     if (buffer[0] == "EVAL") {
-        std::string target = buffer[1];
-        if (buffer.size() == 2) {  //如果直接输出某结点而不赋值
+        std::string target = buffer[1];  // 要计算的对象
+        if (buffer.size() == 3) {  // 不赋值，直接输出 EVAL x #
             if (save[target]->calculate()) {
                 save[target]->display();
             }
-            save[target]->initialize();
-            return;
-        }
-        
-        if (save[target]->calculate()) {
-            save[target]->display();
-        }
-        
-    //     int num = stoi(buffer[2]);
-    //     for (int i = 0; i < num; i++) {
-    //         std::vector<double> tmp;
-    //         tmp.push_back(stod(buffer[2 * i + 4]));
-    //         // save[buffer[2 * i + 3]]->set(stod(buffer[2 * i + 4]));
+        } else {  // 有赋值的过程
+                int paraNum = stoi(buffer[2]);  // 此次EVAL所需参数个数
+                std::string subString;
+                for (unsigned int i = 3; i < buffer.size(); i++) {
+                    subString += buffer[i];
+                }
+                changePara(save, subString);
+                for (int i = 0; i < paraNum - 1; i++) {
+                    std::string strInfo;
+                    getline(std::cin, strInfo, '#');
+                    changePara(save, strInfo);
+                }
+                if (save[target]->calculate()) {
+                    save[target]->display();
+                }
+            }
+        save[target]->initialize();
+    }
+    //  else if (buffer[0] == "SETCONSTANT") {
+    //     std::string target = buffer[1];
+    //     auto isVariable = dynamic_cast<TensorVariable*>(save[target]);
+    //     if (isVariable) {
+    //         str.erase(str.begin(), 12);
+    //         changePara(save, str);
+    //     } else {
+    //         std::cout << "cannot be changed for " << target << "is not a TensorVariable" << std::endl;
     //     }
-    //     if (save[target]->calculate()) {
-    //         std::cout << std::fixed << std::setprecision(4)
-    //         << save[target]->value() << std::endl;
-    //         answer[answer_num] = save[target]->value();
-    //     }
-    //     save[target]->reiscal();  // 刷新结点的状态
-    //     return;
-    // } else if (buffer[0] == "SETCONSTANT") {
-    //     double tmp_var = stod(buffer[2]);
-    //     save[buffer[1]]->set(tmp_var);
-    // } else if (buffer[0] == "SETANSWER") {
-    //     int tmp_var = stoi(buffer[2]);
-    //     save[buffer[1]]->set(answer[tmp_var]);
-    // }
+    // } 
+    else {
+        std::cout << "invalid input command" << std::endl;
+    }
+
+}
+
+
+
+void changePara(std::map<std::string, Tensor*>& save, std::string info) {
+    std::string tmp;
+    std::stringstream ss(info);
+    std::vector<std::string>buffer;
+    while (ss >> tmp) {
+        buffer.push_back(tmp);
+    }
+    unsigned int dimNum = getDataNum(save[buffer[0]]->getDim());
+    if (dimNum == buffer.size() - 2) {
+        std::vector<double> data;
+        for (unsigned int i = 1; i < buffer.size() - 1; i++) {
+            data.push_back(stod(buffer[i]));
+        }
+        save[buffer[0]]->setData(data);
+    } else {
+        std::cout << "invalid parametre number" << std::endl;
+    }
 }

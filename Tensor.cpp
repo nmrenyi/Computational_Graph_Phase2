@@ -4,11 +4,22 @@
 Tensor::Tensor() {}
 void Tensor::initialize() {
     calculated = 0;  // 使节点处于未调用
+    for (auto x : input) {
+        x -> initialize();
+    }
 }
 std::vector<int> Tensor:: getDim() {
     return dim;
 }
 void Tensor::display() {}
+void Tensor::setData(std::vector<double> data_) {
+    data = data_;
+}
+std::vector<double> Tensor::getData() {
+    return data;
+}
+
+
 Tensor::~Tensor(){}
 
 
@@ -54,17 +65,14 @@ bool TensorSingleOperation::calculate() {
 
 // TensorBinaryOperation类成员函数的实现
 TensorBinaryOperation::TensorBinaryOperation(std::string target1, std::string target2, std::string operatorName, std::vector<int>dimInfo, std::map<std::string, Tensor*>& save) {
-    if (checkBroadcastable(save[target1], save[target2])) {
-        operationName = operatorName;
-        dim = dimInfo;
-        input.push_back(save[target1]);
-        input.push_back(save[target2]);
-    } else {
-        std::cout <<  "ValueError: frames are not aligned. Node defining failed." << std::endl;
-    }
+    operationName = operatorName;
+    dim = dimInfo;
+    input.push_back(save[target1]);
+    input.push_back(save[target2]);
 }
 
 
+// 仅仅支持二维矩阵
 bool TensorBinaryOperation::calculate() {
     // 判断此节点是否被调用过,保证每个节点值
     if (calculated) {
@@ -74,14 +82,30 @@ bool TensorBinaryOperation::calculate() {
     bool flag = (input[0]->calculate()) && (input[1]->calculate());
     if (flag) {
         if (operationName == "+") {
+            data.clear();
             std::vector<int>v1 = input[0]->getDim();
             std::vector<int>v2 = input[1]->getDim();
-            if (v1 == v2) {
-                for (int i = 0; i < v1.size(); i++) {
-                    dim.push_back(v1[i] + v2[i]);
+            std::vector<int>standard = dim;
+            if (standard == v2 && standard == v1) {
+                int dataSize = input[0]->getData().size();
+                for (int i = 0; i < dataSize; i++) {
+                    data.push_back(input[0]->getData()[i] + input[1]->getData()[i]);
                 }
             } else {
-                
+                std::vector<double>info1 = input[0]->getData();
+                std::vector<double>info2 = input[1]->getData();
+
+                if (v1 != standard) {
+                    info1 = broadcast(v1, standard, input[0]->getData());
+                }
+                if (v2 != standard) {
+                    info2 = broadcast(v2, standard, input[1]->getData());
+                }
+
+                int dataSize = info1.size();
+                for (int i = 0; i < dataSize; i++) {
+                    data.push_back(info1[i] + info2[i]);
+                }
             }
         }
     } else {
@@ -89,4 +113,18 @@ bool TensorBinaryOperation::calculate() {
     }
 
     return true;
+}
+
+// 根据v的情况，把data broadcast到standard这个大小
+std::vector<double> broadcast(std::vector<int>v, std::vector<int>standard, std::vector<double>data) {
+    std::vector<double> r = data;
+    if (v.size() == standard.size()) {
+        if (v[1] != standard[1]) {
+            int minus = standard[1]- v[1];
+            std::vector<double>another(minus, r[0]); // 这个缺少的元素，重复minus次
+            
+        }
+    } else {
+
+    }
 }
