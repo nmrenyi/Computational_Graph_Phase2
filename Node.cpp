@@ -140,7 +140,7 @@ bool binaryoperation::calculate() {
     }
 }
 
-bool bindoperation::calculate(){
+bool bindoperation::calculate() {
     if (iscalculated())
         return true;
     bool flag = (input[0]->calculate()) && (input[1]->calculate());
@@ -153,7 +153,7 @@ bool bindoperation::calculate(){
     }
 }
 
-bool AssignOperation::calculate(){
+bool AssignOperation::calculate() {
     #ifdef DEBUG
     std::cout << "hello in assign::cal" << std::endl;
     #endif
@@ -163,7 +163,7 @@ bool AssignOperation::calculate(){
     if (flag) {
         double tmp = input[1]->value();
         set(tmp);
-        input[0]->set(tmp); 
+        input[0]->set(tmp);
         return true;
     } else {
         return false;
@@ -207,7 +207,7 @@ bool GRAD::calculate() {
 }
 
 bool AT::calculate() {
-    if (iscalculated()) 
+    if (iscalculated())
         return true;
     if (input[0]->calculate()) {
         set(input[1]->get_deri());
@@ -249,7 +249,7 @@ void singleoperation::derivate(double deri_value) {
 void binaryoperation::derivate(double deri_value) {
     set_deri(deri_value);
     if(set_visit_num()) {
-        // debug 
+        // debug
         if (operationname == "+") {
             input[0]->derivate(get_deri() * 1);
             input[1]->derivate(get_deri() * 1);

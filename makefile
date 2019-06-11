@@ -13,8 +13,11 @@ main2: main.o Input.o Node.o Input.h Node.h
 main3: mainNewton.o newtonMethod.o Node.o Node.h
 	g++ -o main3 mainNewton.o newtonMethod.o Node.o -std=c++14 -Wall
 
-main4: mainTensor.o Tensor.o Tensor.h
-	g++ mainTensor.o Tensor.o -o main4
+main4: mainTensor.o Tensor.o TensorInput.o Tensor.h
+	g++ mainTensor.o Tensor.o TensorInput.o -o main4
+
+main4d: mainTensor.cpp Tensor.cpp TensorInput.cpp Tensor.h
+	g++ mainTensor.cpp Tensor.cpp TensorInput.cpp -o main4d -D debug -Wall
 
 main.o: main.cpp Input.h Node.h
 	g++ -o main.o -c main.cpp -Wall
@@ -34,6 +37,9 @@ newtonMethod.o: newtonMethod.cpp Node.h
 mainTensor.o: mainTensor.cpp Tensor.h
 	g++ -c mainTensor.cpp -Wall
 
+TensorInput.o: TensorInput.cpp Tensor.h
+	g++ -c TensorInput.cpp -Wall
+
 Tensor.o: Tensor.cpp Tensor.h
 	g++ -c Tensor.cpp -Wall
 
@@ -47,4 +53,4 @@ debug: main.cpp Input.cpp Node.cpp Input.h Node.h
 	g++ -d debug main.cpp Input.cpp Node.cpp -std=c++11 -o main -Wall
 
 check:
-	python2 cpplint.py --filter=-build/header_guard,-build/include,-legal/copyright main.cpp Input.cpp Input.h Node.cpp Node.h newtonMethod.cpp mainNewton.cpp
+	python cpplint.py --filter=-build/header_guard,-build/include,-legal/copyright main.cpp Input.cpp Input.h Node.cpp Node.h newtonMethod.cpp mainNewton.cpp
