@@ -4,7 +4,7 @@
 #include <string>
 #include <cmath>
 #include <iomanip>
-#include "Node.h"
+#include "_Node.h"
 
 void base::reiscal() {
     deri_value = 0;

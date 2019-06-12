@@ -1,5 +1,5 @@
-#include "Node.h"
-#include "Input.h"
+#include "_Node.h"
+#include "_Input.h"
 #include <iostream>
 
 int main() {

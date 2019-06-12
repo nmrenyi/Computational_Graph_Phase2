@@ -4,43 +4,43 @@ all: main1 main2 main3 main4
 # main3 牛顿迭代法
 # main4 代表能满足实现Tensor功能的可执行程序
 
-main1: main.o Input.o Node.o Input.h Node.h
+main1: main.o Input.o Node.o _Input.h _Node.h
 	g++ -o main1 main.o Input.o Node.o -std=c++14 -Wall
 
-main2: main.o Input.o Node.o Input.h Node.h
+main2: main.o Input.o Node.o _Input.h _Node.h
 	g++ -D DEBUG -o main2 main.o Input.o Node.o -std=c++14 -Wall
 
-main3: mainNewton.o newtonMethod.o Node.o Node.h
+main3: mainNewton.o newtonMethod.o Node.o _Node.h
 	g++ -o main3 mainNewton.o newtonMethod.o Node.o -std=c++14 -Wall
 
-main4: mainTensor.o Tensor.o TensorInput.o Tensor.h
+main4: mainTensor.o Tensor.o TensorInput.o _Tensor.h
 	g++ mainTensor.o Tensor.o TensorInput.o -o main4
 
-main4d: mainTensor.cpp Tensor.cpp TensorInput.cpp Tensor.h
+main4d: mainTensor.cpp Tensor.cpp TensorInput.cpp _Tensor.h
 	g++ mainTensor.cpp Tensor.cpp TensorInput.cpp -o main4d -D debug -Wall
 
-main.o: main.cpp Input.h Node.h
+main.o: main.cpp _Input.h _Node.h
 	g++ -o main.o -c main.cpp -Wall
 
-Input.o: Input.cpp Input.h Node.h
+Input.o: Input.cpp _Input.h _Node.h
 	g++ -o Input.o -c Input.cpp -Wall
 
-Node.o: Node.cpp Node.h
+Node.o: Node.cpp _Node.h
 	g++ -o Node.o -c Node.cpp -Wall
 
-mainNewton.o: mainNewton.cpp Node.h
+mainNewton.o: mainNewton.cpp _Node.h
 	g++ -o mainNewton.o -c mainNewton.cpp -Wall
 
-newtonMethod.o: newtonMethod.cpp Node.h
+newtonMethod.o: newtonMethod.cpp _Node.h
 	g++ -o newtonMethod.o -c newtonMethod.cpp -Wall
 
-mainTensor.o: mainTensor.cpp Tensor.h
+mainTensor.o: mainTensor.cpp _Tensor.h
 	g++ -c mainTensor.cpp -Wall
 
-TensorInput.o: TensorInput.cpp Tensor.h
+TensorInput.o: TensorInput.cpp _Tensor.h
 	g++ -c TensorInput.cpp -Wall
 
-Tensor.o: Tensor.cpp Tensor.h
+Tensor.o: Tensor.cpp _Tensor.h
 	g++ -c Tensor.cpp -Wall
 
 clean_w:
@@ -49,9 +49,9 @@ clean_w:
 clean:
 	rm main1 main2 main3 *.o
 
-debug: main.cpp Input.cpp Node.cpp Input.h Node.h
+debug: main.cpp Input.cpp Node.cpp _Input.h _Node.h
 	g++ -d debug main.cpp Input.cpp Node.cpp -std=c++11 -o main -Wall
 
 # python 3.x 版本可运行下面的命令
 check:
-	python cpplint.py --filter=-build/include,-legal/copyright,-runtime/references main.cpp Input.cpp Input.h Node.cpp Node.h newtonMethod.cpp mainNewton.cpp
+	python cpplint.py --filter=-build/include,-legal/copyright,-runtime/references main.cpp Input.cpp _Input.h Node.cpp _Node.h newtonMethod.cpp mainNewton.cpp

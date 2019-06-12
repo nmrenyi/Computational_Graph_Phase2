@@ -3,7 +3,7 @@
 #include<vector>
 #include<sstream>
 #include<algorithm>
-#include"Tensor.h"
+#include"_Tensor.h"
 
 int getDataNum(std::vector<int>dim) {
     int tmp = 1;
