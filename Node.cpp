@@ -171,7 +171,7 @@ bool AssignOperation::calculate() {
 }
 
 bool COND::calculate() {
-    pres++; // 前驱节点数目加一
+    pres++;  // 前驱节点数目加一
     // 判断此节点是否被调用过，保证一个节点只计算一次
     if (iscalculated())
         return true;
@@ -222,7 +222,7 @@ void Placeholder::derivate(double deri_value) {
 
 void singleoperation::derivate(double deri_value) {
     set_deri(deri_value);
-    if(set_visit_num()) {
+    if (set_visit_num()) {
         if (operationname == "SIN") {
             input[0]->derivate(get_deri() * cos(input[0]->value()));
         } else if (operationname == "LOG") {
@@ -230,17 +230,19 @@ void singleoperation::derivate(double deri_value) {
         } else if (operationname == "EXP") {
             input[0]->derivate(get_deri() * exp(input[0]->value()));
         } else if (operationname == "TANH") {
-            input[0]->derivate(get_deri() * (1 - input[0]->value() * input[0]->value()));
+            input[0]->derivate(get_deri() *
+                (1 - input[0]->value() * input[0]->value()));
         } else if (operationname == "SIGMOID") {
-            input[0]->derivate(get_deri() * input[0]->value() * (1 - input[0]->value()));
+            input[0]->derivate(get_deri() *
+                input[0]->value() * (1 - input[0]->value()));
         } else if (operationname == "PRINT") {
             input[0]->derivate(get_deri());
         } else if (operationname == "ASSERT") {
-            if(input[0]->value() > 0) input[0]->derivate(get_deri() * 1.0);
-            else {
+            if (input[0]->value() > 0) {
+                input[0]->derivate(get_deri() * 1.0);
+            } else {
                 std::cout
-                << "ERROR: Assertion failed"
-                << std::endl;
+                << "ERROR: Assertion failed"<< std::endl;
             }
         }
     }
@@ -248,7 +250,7 @@ void singleoperation::derivate(double deri_value) {
 
 void binaryoperation::derivate(double deri_value) {
     set_deri(deri_value);
-    if(set_visit_num()) {
+    if (set_visit_num()) {
         // debug
         if (operationname == "+") {
             input[0]->derivate(get_deri() * 1);
@@ -261,7 +263,8 @@ void binaryoperation::derivate(double deri_value) {
             input[1]->derivate(get_deri() * input[0]->value());
         } else if (operationname == "/") {
             input[0]->derivate(get_deri() / input[1]->value());
-            input[1]->derivate(get_deri() * (- input[0]->value() / input[1]->value() / input[1]->value()));
+            input[1]->derivate(get_deri() *
+                (- input[0]->value() / input[1]->value() / input[1]->value()));
         } else if (operationname == ">") {
             input[0]->derivate(get_deri() > 0 ? get_deri() : -get_deri());
             input[1]->derivate(get_deri() > 0 ? -get_deri() : get_deri());

@@ -52,5 +52,6 @@ clean:
 debug: main.cpp Input.cpp Node.cpp Input.h Node.h
 	g++ -d debug main.cpp Input.cpp Node.cpp -std=c++11 -o main -Wall
 
+# python 3.x 版本可运行下面的命令
 check:
-	python cpplint.py --filter=-build/header_guard,-build/include,-legal/copyright main.cpp Input.cpp Input.h Node.cpp Node.h newtonMethod.cpp mainNewton.cpp
+	python cpplint.py --filter=-build/include,-legal/copyright,-runtime/references main.cpp Input.cpp Input.h Node.cpp Node.h newtonMethod.cpp mainNewton.cpp

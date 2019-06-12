@@ -31,8 +31,8 @@ base* makePower(int degree, std::map <std::string, base*>& store, Counter& c) {
     return (new binaryoperation("x", next_name, "*", store));
 }
 
-base* makeMulti(double coefficient, int degree, std::map <std::string, base*>& store, Counter& c) {
-
+base* makeMulti(double coefficient, int degree,
+    std::map <std::string, base*>& store, Counter& c) {
     if (degree == 0) {
         base* tmp = new Constant;
         tmp->set(coefficient);
@@ -48,7 +48,8 @@ base* makeMulti(double coefficient, int degree, std::map <std::string, base*>& s
 }
 base* makePlus(std::vector<double> equation,
 std::map <std::string, base*>& store, Counter& c) {
-    if (equation.size() == 3) {  // 需要处理的vector是剩下一个系数没有处理了(剩下两个是初始值和最高次数)
+    // 需要处理的vector是剩下一个系数没有处理了(剩下两个是初始值和最高次数)
+    if (equation.size() == 3) {
         return makeMulti(equation[0], equation[2], store, c);
     }
     c.addCount();
