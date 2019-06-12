@@ -1,5 +1,5 @@
-#include "Node.h"
-#include "Input.h"
+#include "_Node.h"
+#include "_Input.h"
 #include <iostream>
 
 int main() {
@@ -15,7 +15,7 @@ int main() {
     }
     std::cin >> evalnum;
     getchar();  // 吸收evalnum后的换行符
-    for (int i = 1; i <= evalnum; i++) {  //进行输出运算操作
+    for (int i = 1; i <= evalnum; i++) {  // 进行输出运算操作
         Inputevalnum(i);
     }
     delete_memory();  // 释放内存

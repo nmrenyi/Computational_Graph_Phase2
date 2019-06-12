@@ -1,12 +1,16 @@
 // 本文件为Tensor运算的入口
-#include"Tensor.h"
+#include"_Tensor.h"
 #include<iostream>
 #include<map>
 #include<string>
 #include<sstream>
+#include<cstdlib>
+#include<algorithm>
 
-void Inputoperate(std::map<std::string, Tensor*>& save);
-void InputNode(std::map<std::string, Tensor*>& save);
+// 一些函数声明
+void Inputoperate(std::map<std::string, Tensor*>&);
+void InputNode(std::map<std::string, Tensor*>&);
+void Inputevalnum(int, std::map<std::string, Tensor*>&);
 
 int main() {
     std::map<std::string, Tensor*> save;
@@ -22,11 +26,12 @@ int main() {
     }
     std::cin >> evalnum;
     getchar();  // 吸收evalnum后的换行符
-    for (int i = 1; i <= evalnum; i++) {  //进行输出运算操作
-        // Inputevalnum(i);
+    for (int i = 1; i <= evalnum; i++) {  // 进行输出运算操作
+        Inputevalnum(i, save);
     }
     return 0;
 }
+<<<<<<< HEAD
 
 int getDataNum(std::vector<int>dim) {
     int tmp = 1;
@@ -118,3 +123,5 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
         std::cout << "invalid input type" << std::endl;
     }
 }
+=======
+>>>>>>> ry
