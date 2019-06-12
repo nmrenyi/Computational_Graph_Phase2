@@ -109,6 +109,11 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
         Tensor* binary =
         new TensorBinaryOperation(buffer[2], buffer[4], buffer[3], save);
         save[buffer[0]] = binary;
+    } else if (buffer.size() == 6) { // b = reshape a m n
+        Tensor* reshape = new TensorReshapeOperation(buffer[4], buffer[5], buffer[3], save);
+
+        
+        
     } else {
         std::cout << "invalid input type" << std::endl;
     }

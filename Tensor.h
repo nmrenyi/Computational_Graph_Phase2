@@ -55,3 +55,8 @@ class TensorBinaryOperation : public Tensor {
         input.push_back(save[target2]);
     }
 };
+
+class TensorReshapeOperation : public Tensor {
+ public:
+    TensorBinaryOperation(std::string dim1, std::string haha){;}
+};
