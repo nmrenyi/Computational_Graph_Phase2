@@ -14,7 +14,6 @@ std::vector<int> Tensor:: getDim() const {
 void Tensor::display() const {
     #ifdef debug
     std::cout << "in display, data.size() = " << data.size()  << std::endl;
-    
     #endif
     for (auto x : data) {
         std::cout << x << " ";
@@ -29,11 +28,12 @@ std::vector<double> Tensor::getData() const {
 }
 
 
-Tensor::~Tensor(){}
+Tensor::~Tensor() {}
 
 
 // TensorConstant类成员函数的实现
-TensorConstant:: TensorConstant(std::vector<int>dimInfo, std::vector<double>dataInfo) {
+TensorConstant:: TensorConstant(std::vector<int>dimInfo,
+    std::vector<double>dataInfo) {
     dim = dimInfo;
     data = dataInfo;
     #ifdef debug
@@ -72,7 +72,8 @@ bool TensorPlaceholder:: calculate() {
 
 
 // TensorVariable类成员函数的实现
-TensorVariable::TensorVariable(std::vector<int>dimInfo, std::vector<double>dataInfo) {
+TensorVariable::TensorVariable(std::vector<int>dimInfo,
+    std::vector<double>dataInfo) {
     dim = dimInfo;
     data = dataInfo;
 }
@@ -82,7 +83,8 @@ bool TensorVariable:: calculate() {
 
 
 // TensorSingleOperation类成员函数的实现
-TensorSingleOperation::TensorSingleOperation(std::string target, std::string operatorName, std::map<std::string, Tensor*>& save) {
+TensorSingleOperation::TensorSingleOperation(std::string target,
+    std::string operatorName, std::map<std::string, Tensor*>& save) {
     operationName = operatorName;
     input.push_back(save[target]);
 }
@@ -91,22 +93,25 @@ bool TensorSingleOperation::calculate() {
 }
 
 // TensorBinaryOperation类成员函数的实现
-TensorBinaryOperation::TensorBinaryOperation(std::string target1, std::string target2, std::string operatorName, std::vector<int>dimInfo, std::map<std::string, Tensor*>& save) {
+TensorBinaryOperation::TensorBinaryOperation(std::string target1,
+    std::string target2, std::string operatorName, std::vector<int>dimInfo,
+    std::map<std::string, Tensor*>& save) {
     operationName = operatorName;
     dim = dimInfo;
     input.push_back(save[target1]);
     input.push_back(save[target2]);
 }
 
-std::vector<double> broadcast(std::vector<int>v, std::vector<int>standard, std::vector<double>data);
+std::vector<double> broadcast(std::vector<int>v,
+    std::vector<int>standard, std::vector<double>data);
 // 仅仅支持二维矩阵
 bool TensorBinaryOperation::calculate() {
     // 判断此节点是否被调用过,保证每个节点值
     if (calculated) {
         return true;
     }
-    
-    bool flag = (input[0]->calculate()) && (input[1]->calculate());
+    bool flag = (input[0]->calculate())
+        && (input[1]->calculate());
     if (flag) {
         std::vector<int>v1 = input[0]->getDim();
         std::vector<int>v2 = input[1]->getDim();
@@ -137,31 +142,29 @@ bool TensorBinaryOperation::calculate() {
     }
     return true;
 }
-
-int getDataNum(std::vector<int>dim) ;  // 只是一个声明，方便调用另外一个cpp当中的函数
+// 只是一个声明，方便调用另外一个cpp当中的函数
+int getDataNum(std::vector<int>dim);
 
 // 根据v的情况，把data broadcast到standard这个大小
-std::vector<double> broadcast(std::vector<int>v, std::vector<int>standard, std::vector<double>data) {
-    #ifdef debug
-        std::cout << "in broadcast" << std::endl;
-        std::cout << "v.size() = " << v.size() << " standard.size = " << standard.size() << std::endl;
-    #endif 
+std::vector<double> broadcast(std::vector<int>v,
+    std::vector<int>standard, std::vector<double>data) {
     if (v == standard) {
         return data;
     }
     std::vector<double> r = data;
     if (v.size() == standard.size()) {
-
         // 未能实现任一维数的broadcast
         // for (int i = standard.size() - 1; i >= 0; i++) {
         //     if (v[i] != standard[i]) {
         //         int minus = standard[i] - v[i];
-        //         std::vector<int>tmp(standard.begin(), standard.begin() + i - 1);
+        //         std::vector<int>tmp(standard.begin(),
+                // standard.begin() + i - 1);
         //         int num = getDataNum(tmp);
         //         for (int j = num; j > 0; j--) {
         //             int target = *(r.begin() + j - 1);
         //             std::vector<int>includes()
-        //             std::vector<double>another(r.begin(), r.begin() + v[i], );
+        //             std::vector<double>another(r.begin(),
+                        // r.begin() + v[i], );
         //         }
         //     }
         // }
@@ -169,21 +172,21 @@ std::vector<double> broadcast(std::vector<int>v, std::vector<int>standard, std::
             int minus = standard[1]- v[1];  // 要复制多少个这个元素
             for (int i = v[0]; i > 0; i--) {  // 有这么多元素需要复制
                 int target = *(r.begin() + (i - 1) * v[1]);  // 当前要复制的元素
-                std::vector<double>another(minus, target); // 这个缺少的元素，重复minus次
-                r.insert(r.begin() + (i - 1) * v[1] + 1, another.begin(), another.end());
+                // 缺少的元素重复minus次
+                std::vector<double>another(minus, target);
+                r.insert(r.begin() + (i - 1) * v[1] + 1,
+                    another.begin(), another.end());
             }
         }
         if (v[0] != standard[0]) {
-            std::vector<double>another(r.begin(), r.begin() + standard[1]);  // 需要复制的内容
+            std::vector<double>another(r.begin(),
+                r.begin() + standard[1]);  // 需要复制的内容
             int minus = standard[0] - v[0];  // 复制次数
             for (int i = 0; i < minus; i++) {
                 r.insert(r.end(), another.begin(), another.end());
             }
         }
     } else {  // 维数不相等的时候，把它补成相等的
-        #ifdef debug
-            std::cout << "oops, we found it not matched in dimensions" << std::endl;
-        #endif
         int minus = standard.size() - v.size();
         std::vector<int>another(minus, 1);
         v.insert(v.begin(), another.begin(), another.end());

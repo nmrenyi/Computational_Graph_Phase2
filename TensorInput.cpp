@@ -17,14 +17,15 @@ void InputNode(std::map<std::string, Tensor*>& save) {
     char type;
     int dimNum = 0;
     std::vector<int>dim;
-    std::cin >> name >> type >> dimNum;  // x P 2  分别是节点名字，属性，共有的维数
+    // x P 2  分别是节点名字，属性，共有的维数
+    std::cin >> name >> type >> dimNum;
     for (int i = 0; i < dimNum; i++) {
         int tmp = 0;
         std::cin >> tmp;  // 2 1  分别是每一维的长度
         dim.push_back(tmp);
     }
 
-    switch (type) {  //判断输入的变量的类型
+    switch (type) {  // 判断输入的变量的类型
         case 'P': {
             Tensor* Newplace = new TensorPlaceholder(dim);
             save[name] = Newplace;
@@ -32,7 +33,7 @@ void InputNode(std::map<std::string, Tensor*>& save) {
         break;
         case 'C': {
             std::vector<double>data;
-            int dataNum = getDataNum(dim);  // 这里可以换用lamda表达式！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
+            int dataNum = getDataNum(dim);
             for (int i = 0; i < dataNum; i++) {
                 double tmp = 0;
                 std::cin >> tmp;
@@ -68,14 +69,17 @@ std::pair<bool, std::vector<int>> checkBroadcast(Tensor* ptr1, Tensor* ptr2) {
     std::vector<int> tmpDim2 = ptr2->getDim();
 
     #ifdef debug
-        std::cout << "tmpDim1.size = " << tmpDim1.size() << " tmpDim2.size = " << tmpDim2.size() << std::endl;
+        std::cout << "tmpDim1.size = "
+        << tmpDim1.size() << " tmpDim2.size = " << tmpDim2.size() << std::endl;
     #endif
     std::vector<int>tmp;  // 储存加节点的维数信息
     // int dimMax = std::max(tmpDim1.size(), tmpDim2.size());
     // int dimMin = std::min(tmpDim1.size(), tmpDim2.size());
 
-    std::vector<int> dim1 = (tmpDim1.size() > tmpDim2.size()) ? tmpDim1 : tmpDim2;
-    std::vector<int> dim2 = (tmpDim1.size() < tmpDim2.size()) ? tmpDim1 : tmpDim2;
+    std::vector<int> dim1 = (tmpDim1.size() > tmpDim2.size())
+        ? tmpDim1 : tmpDim2;
+    std::vector<int> dim2 = (tmpDim1.size() < tmpDim2.size())
+        ? tmpDim1 : tmpDim2;
 
     int minus = dim1.size() - dim2.size();
     std::vector<int> another(minus, 1);
@@ -84,15 +88,18 @@ std::pair<bool, std::vector<int>> checkBroadcast(Tensor* ptr1, Tensor* ptr2) {
     for (unsigned int i = 1; i <= dim1.size(); i++) {
         int length1 = *(dim1.end() - i);
         int length2 = *(dim2.end() - i);
-        tmp.push_back(std::max(length1, length2));  // 倒序将合成节点的维数加入vector
+        // 倒序将合成节点的维数加入vector
+        tmp.push_back(std::max(length1, length2));
         #ifdef debug
-            std::cout << "length1 = " << length1 << " length2 = " << length2 << std::endl;
+            std::cout << "length1 = " << length1 <<
+            " length2 = " << length2 << std::endl;
         #endif
         if (length1 != length2 && length1 != 1 && length2 != 1) {
             #ifdef debug
                 std::cout << "failed to broadcast " << std::endl;
             #endif
-            return std::make_pair(false, tmp);  // 若发现不可broadcast，直接返回第一个值是false的pair
+            // 若发现不可broadcast，直接返回第一个值是false的pair
+            return std::make_pair(false, tmp);
         }
     }
     std::reverse(tmp.begin(), tmp.end());  // 将倒序的vector反过来
@@ -114,21 +121,23 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
     if (buffer.size() == 4) {  // a = SIN x 单目运算符
         Tensor* single = new TensorSingleOperation(buffer[3], buffer[2], save);
         save[buffer[0]] = single;
-    }
-    else if (buffer.size() == 5) {  // a = x + y 双目运算符
+    } else if (buffer.size() == 5) {  // a = x + y 双目运算符
         auto check = checkBroadcast(save[buffer[2]], save[buffer[4]]);
         if (check.first) {
             #ifdef debug
                 std::cout << "ok to broadcast" << std::endl;
             #endif
             Tensor* binary =
-            new TensorBinaryOperation(buffer[2], buffer[4], buffer[3], check.second, save);
+            new TensorBinaryOperation(buffer[2], buffer[4],
+            buffer[3], check.second, save);
             save[buffer[0]] = binary;
             #ifdef debug
                 std::cout << "binary operator built" << std::endl;
             #endif
         } else {
-            std::cout << "Unable to broadcast. Node defining failed" << std::endl;
+            std::cout <<
+            "Unable to broadcast. Node defining failed"
+            << std::endl;
         }
 
     } else {
@@ -189,7 +198,8 @@ void Inputevalnum(int answer_num, std::map<std::string, Tensor*>& save) {
                 subString += buffer[i];
                 subString += " ";
             }
-            std::cout << "before giving para" << std::endl << subString << std::endl;
+            std::cout << "before giving para"
+            << std::endl << subString << std::endl;
             changePara(save, subString);
             #ifdef debug
                 std::cout << "change para complete" << std::endl;
@@ -205,20 +215,7 @@ void Inputevalnum(int answer_num, std::map<std::string, Tensor*>& save) {
             }
         }
         save[target]->initialize();
-    }
-    //  else if (buffer[0] == "SETCONSTANT") {
-    //     std::string target = buffer[1];
-    //     auto isVariable = dynamic_cast<TensorVariable*>(save[target]);
-    //     if (isVariable) {
-    //         str.erase(str.begin(), 12);
-    //         changePara(save, str);
-    //     } else {
-    //         std::cout << "cannot be changed for " << target << "is not a TensorVariable" << std::endl;
-    //     }
-    // } 
-    else {
+    } else {
         std::cout << "invalid input command" << std::endl;
     }
-
 }
-

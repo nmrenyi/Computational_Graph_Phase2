@@ -26,7 +26,7 @@ int main() {
     }
     std::cin >> evalnum;
     getchar();  // 吸收evalnum后的换行符
-    for (int i = 1; i <= evalnum; i++) {  //进行输出运算操作
+    for (int i = 1; i <= evalnum; i++) {  // 进行输出运算操作
         Inputevalnum(i, save);
     }
     return 0;

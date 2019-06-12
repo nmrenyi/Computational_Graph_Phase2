@@ -54,4 +54,4 @@ debug: main.cpp Input.cpp Node.cpp _Input.h _Node.h
 
 # python 3.x 版本可运行下面的命令
 check:
-	python cpplint.py --filter=-build/include,-legal/copyright,-runtime/references main.cpp Input.cpp _Input.h Node.cpp _Node.h newtonMethod.cpp mainNewton.cpp
+	python cpplint.py --filter=-build/include,-legal/copyright,-runtime/references main.cpp Input.cpp _Input.h Node.cpp _Node.h newtonMethod.cpp mainNewton.cpp mainTensor.cpp Tensor.cpp TensorInput.cpp _Tensor.h
