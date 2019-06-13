@@ -194,3 +194,16 @@ std::vector<double> broadcast(std::vector<int>v,
     }
     return r;
 }
+
+// TensorReshapeOperation类成员函数的实现
+TensorReshapeOperation::TensorReshapeOperation(std::string target,
+    std::vector<int> aimDim, 
+    std::map<std::string, Tensor*>& save) {
+    input.push_back(save[target]);
+    data = save[target]->getData();
+    dim = aimDim;
+}
+
+bool TensorReshapeOperation::calculate() {
+    return true;
+}
