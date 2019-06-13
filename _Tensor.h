@@ -71,3 +71,12 @@ class TensorReshapeOperation : public Tensor {
     TensorReshapeOperation(std::string target, std::vector<int> aimDim, std::map<std::string, Tensor*>& save);
     bool calculate();
 };
+
+class TensorConcatOperation : public Tensor {
+ private:
+    int concatWay;
+ public:
+    TensorConcatOperation(std::string target1, 
+      std::string target2, int concatway, std::map<std::string, Tensor*>& save);
+    bool calculate();
+};

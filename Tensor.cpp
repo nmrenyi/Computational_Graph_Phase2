@@ -200,10 +200,49 @@ TensorReshapeOperation::TensorReshapeOperation(std::string target,
     std::vector<int> aimDim, 
     std::map<std::string, Tensor*>& save) {
     input.push_back(save[target]);
-    data = save[target]->getData();
+    // data = save[target]->getData();
     dim = aimDim;
 }
 
 bool TensorReshapeOperation::calculate() {
-    return true;
+    if (calculated) {
+        return true;
+    }
+    bool flag = input[0]->calculate();
+    if (flag) {
+        if (getDataNum(dim) == getDataNum(input[0]->getDim())) {
+            data = input[0]->getData();
+            calculated = true;
+            return true;
+        } else {
+            std::cout << 
+            "Unable to reshape. The number of data is wrong."
+            << std::endl;
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+TensorConcatOperation::TensorConcatOperation(std::string target1, 
+    std::string target2, int concatway, std::map<std::string, Tensor*>& save){
+    concatWay = concatway;
+    input.push_back(save[target1]);
+    input.push_back(save[target2]);
+}
+
+bool TensorConcatOperation::calculate() {
+    if (calculated) {
+        return true;
+    }
+    bool flag1 = input[0]->calculate();
+    bool flag2 = input[1]->calculate();
+    if (flag1 && flag2) {
+        //i love your asshole......
+        calculated = true;
+        return true;
+    } else {
+        return false;
+    }
 }
