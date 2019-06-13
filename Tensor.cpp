@@ -239,7 +239,51 @@ bool TensorConcatOperation::calculate() {
     bool flag1 = input[0]->calculate();
     bool flag2 = input[1]->calculate();
     if (flag1 && flag2) {
-        //i love your asshole......
+        std::vector<int> dim1 = input[0]->getDim();
+        std::vector<int> dim2 = input[1]->getDim();
+        int size1 = dim1.size();
+        int size2 = dim2.size();
+        if (size1 != size2) { // 两个tensor维数不一样，无法concat
+            return false;
+        }
+        // 判断能否concat的条件：只有拼在一起的那个轴长度可以不一样，剩下都得一样
+        bool canConcat = 1;
+        for (int i = 0; i < size1 ; i++) {
+            if (i != concatWay && dim1[i] != dim2[i]) {
+                canConcat = 0;
+                break;
+            }
+        }
+        if (!canConcat) {
+            return false;
+        }
+        // 判断完成 这上边几行写的太丑了谁帮我改一改
+        
+        // 比较简单地，先给出结点concat的dim
+        dim = dim1;
+        dim[concatWay] = dim1[concatWay] + dim2[concatWay];
+
+        //然后给出data
+        int groupNum1 = 1;
+        int groupNum2 = 1;
+        for (int i = size1-1; i != concatWay - 1; i--) {
+            groupNum1 *= dim1[i]; 
+            groupNum2 *= dim2[i];
+        }
+        int totalDataNum = getDataNum(dim);
+        int placedNum = 0;
+        std::vector<double> thisdata;
+        int N = 0;
+        while (placedNum != totalDataNum) {
+            for (int i = 0; i < groupNum1; i++) {
+                thisdata.push_back(dim1[N*groupNum1+i]);
+            }
+            for (int i = 0; i < groupNum2; i++) {
+                thisdata.push_back(dim2[N*groupNum2+i]);
+            }
+            N++;
+        }
+        setData(thisdata);
         calculated = true;
         return true;
     } else {
