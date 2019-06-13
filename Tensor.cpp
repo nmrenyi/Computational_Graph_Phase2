@@ -264,16 +264,17 @@ bool TensorConcatOperation::calculate() {
         dim[concatWay] = dim1[concatWay] + dim2[concatWay];
 
         //然后给出data
-        int groupNum1 = 1;
+        int groupNum1 = 1;//每次向thisdata中加入一个组团的data数量
         int groupNum2 = 1;
-        for (int i = size1-1; i != concatWay - 1; i--) {
+        for (int i = size1-1; i != concatWay - 1; i--) {//计算两个groupNum
             groupNum1 *= dim1[i]; 
             groupNum2 *= dim2[i];
         }
-        int totalDataNum = getDataNum(dim);
-        int placedNum = 0;
+        int totalDataNum = getDataNum(dim);//此concat后的结点的dataNum
+        
+        int placedNum = 0;// 已经向新data(thisdata)中放入的数字的数量
         std::vector<double> thisdata;
-        int N = 0;
+        int N = 0; // 第N个回合，每个回合放入data1与data2中各一个组团
         while (placedNum != totalDataNum) {
             for (int i = 0; i < groupNum1; i++) {
                 thisdata.push_back(dim1[N*groupNum1+i]);
