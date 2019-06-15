@@ -34,13 +34,13 @@ base* makePower(int degree, std::map <std::string, base*>& store, Counter& c) {
 base* makeMulti(double coefficient, int degree,
     std::map <std::string, base*>& store, Counter& c) {
     if (degree == 0) {
-        base* tmp = new Constant;
-        tmp->set(coefficient);
+        base* tmp = new Constant(coefficient);
+        // tmp->set(coefficient);
         return tmp;
     }
     std::string constant = std::to_string(coefficient);
-    store[constant] = new Constant;
-    store[constant]->set(coefficient);
+    store[constant] = new Constant(coefficient);
+    // store[constant]->set(coefficient);
     c.addCount();
     std::string multi_name = "Multi" + std::to_string(c.getCount());
     store[multi_name] = makePower(degree, store, c);

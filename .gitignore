@@ -3,6 +3,8 @@
 *.pdf
 *.exe
 *.o
+Tensor
+mainTensor
 main
 main1
 main2

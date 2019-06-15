@@ -220,6 +220,14 @@ void Placeholder::derivate(double deri_value) {
     set_deri(deri_value);
 }
 
+void Variable::derivate(double deri_value) {
+    set_deri(deri_value);
+}
+
+void Constant::derivate(double deri_value) {
+    set_deri(deri_value);
+}
+
 void singleoperation::derivate(double deri_value) {
     set_deri(deri_value);
     if (set_visit_num()) {
@@ -251,7 +259,6 @@ void singleoperation::derivate(double deri_value) {
 void binaryoperation::derivate(double deri_value) {
     set_deri(deri_value);
     if (set_visit_num()) {
-        // debug
         if (operationname == "+") {
             input[0]->derivate(get_deri() * 1);
             input[1]->derivate(get_deri() * 1);

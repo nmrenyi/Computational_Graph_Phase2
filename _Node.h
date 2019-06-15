@@ -16,7 +16,7 @@ class base {
 
  public:
     // 给节点赋值，将当前节点修改为已调用
-    void set(double x) {
+    virtual void set(double x) {
         output_value = x;
         iscal = true;
     }
@@ -37,10 +37,13 @@ class base {
 
 class Constant :public base {
  public:
-    Constant() {}
-    void set(double) = delete;  // 确保常量不可以修改
-    void derivate(double pre_deri_value) {}
-    bool calculate() { return true; }  // 常量恒为真值
+    Constant(double x) {
+        output_value = x;
+        iscal = true;
+    } 
+    void set(double x) override {}  // 确保常量不可以修改
+    void derivate(double pre_deri_value) override;
+    bool calculate() override { pres++; return true; }  // 常量恒为真值
 };
 
 class Placeholder :public base {
@@ -52,8 +55,8 @@ class Placeholder :public base {
 
 class Variable :public base {
  public:
-    void derivate(double pre_deri_value) {}
-    bool calculate() { return true; }  // V类也一定有值的存在
+    void derivate(double pre_deri_value);
+    bool calculate() { pres++; return true; }  // V类也一定有值的存在
 };
 
 // 单目运算符

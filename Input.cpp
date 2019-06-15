@@ -31,11 +31,10 @@ void InputNode() {
         }
         break;
         case 'C': {
-            base* Newconstant = new Constant;
-            save[name] = Newconstant;
             double value;
             std::cin >> value;
-            Newconstant->set(value);
+            base* Newconstant = new Constant(value);
+            save[name] = Newconstant;
         }
         break;
         case 'V': {
