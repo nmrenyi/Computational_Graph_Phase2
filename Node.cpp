@@ -7,7 +7,7 @@
 #include "_Node.h"
 
 void base::reiscal() {
-    deri_value = 0;
+    deri_value = pres = visit_num = 0;
     iscal = false;
     // 递归调用清空所有被调用节点的计算状态
     // 保证每次执行新的EVAL时结点状态都是未调用
