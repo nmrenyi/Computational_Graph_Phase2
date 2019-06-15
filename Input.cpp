@@ -1,5 +1,5 @@
-#include "Input.h"
-#include "Node.h"
+#include "_Input.h"
+#include "_Node.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -24,18 +24,17 @@ void InputNode() {
     if (save.find(name) != save.end()) {
         save_for_delete.push_back(save[name]);
     }
-    switch (type) {  //判断输入的变量的类型
+    switch (type) {  // 判断输入的变量的类型
         case 'P': {
             base* Newplace = new Placeholder;
             save[name] = Newplace;
         }
         break;
         case 'C': {
-            base* Newconstant = new Constant;
-            save[name] = Newconstant;
             double value;
             std::cin >> value;
-            Newconstant->set(value);
+            base* Newconstant = new Constant(value);
+            save[name] = Newconstant;
         }
         break;
         case 'V': {
@@ -104,7 +103,7 @@ void Inputevalnum(int answer_num) {
     }
     if (buffer[0] == "EVAL") {
         std::string target = buffer[1];
-        if (buffer.size() == 2) {  //如果直接输出某结点而不赋值
+        if (buffer.size() == 2) {  // 如果直接输出某结点而不赋值
             if (save[target]->calculate()) {
                 std::cout << std::fixed << std::setprecision(4)
                 << save[target]->value() << std::endl;

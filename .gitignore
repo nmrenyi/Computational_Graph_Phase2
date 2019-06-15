@@ -3,7 +3,10 @@
 *.pdf
 *.exe
 *.o
+Tensor
+mainTensor
+main
 main1
 main2
 main3
-core
+main4

@@ -1,8 +1,11 @@
-1
-x P
-3
-a = x + x
+2
+x C 3.0
+y V -0.4228
+4
+a = x + y
 A = GRAD a
 Ax = A AT x
-1
-EVAL Ax 1 x 1.0
+Ay = A AT y
+2
+EVAL Ax
+EVAL Ay

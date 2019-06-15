@@ -4,7 +4,7 @@
 #include <string>
 #include <cmath>
 #include <iomanip>
-#include "Node.h"
+#include "_Node.h"
 
 void base::reiscal() {
     deri_value = 0;
@@ -140,7 +140,7 @@ bool binaryoperation::calculate() {
     }
 }
 
-bool bindoperation::calculate(){
+bool bindoperation::calculate() {
     if (iscalculated())
         return true;
     bool flag = (input[0]->calculate()) && (input[1]->calculate());
@@ -153,7 +153,7 @@ bool bindoperation::calculate(){
     }
 }
 
-bool AssignOperation::calculate(){
+bool AssignOperation::calculate() {
     #ifdef DEBUG
     std::cout << "hello in assign::cal" << std::endl;
     #endif
@@ -163,7 +163,7 @@ bool AssignOperation::calculate(){
     if (flag) {
         double tmp = input[1]->value();
         set(tmp);
-        input[0]->set(tmp); 
+        input[0]->set(tmp);
         return true;
     } else {
         return false;
@@ -171,7 +171,7 @@ bool AssignOperation::calculate(){
 }
 
 bool COND::calculate() {
-    pres++; // 前驱节点数目加一
+    pres++;  // 前驱节点数目加一
     // 判断此节点是否被调用过，保证一个节点只计算一次
     if (iscalculated())
         return true;
@@ -207,7 +207,7 @@ bool GRAD::calculate() {
 }
 
 bool AT::calculate() {
-    if (iscalculated()) 
+    if (iscalculated())
         return true;
     if (input[0]->calculate()) {
         set(input[1]->get_deri());
@@ -220,9 +220,17 @@ void Placeholder::derivate(double deri_value) {
     set_deri(deri_value);
 }
 
+void Variable::derivate(double deri_value) {
+    set_deri(deri_value);
+}
+
+void Constant::derivate(double deri_value) {
+    set_deri(deri_value);
+}
+
 void singleoperation::derivate(double deri_value) {
     set_deri(deri_value);
-    if(set_visit_num()) {
+    if (set_visit_num()) {
         if (operationname == "SIN") {
             input[0]->derivate(get_deri() * cos(input[0]->value()));
         } else if (operationname == "LOG") {
@@ -230,17 +238,19 @@ void singleoperation::derivate(double deri_value) {
         } else if (operationname == "EXP") {
             input[0]->derivate(get_deri() * exp(input[0]->value()));
         } else if (operationname == "TANH") {
-            input[0]->derivate(get_deri() * (1 - input[0]->value() * input[0]->value()));
+            input[0]->derivate(get_deri() *
+                (1 - input[0]->value() * input[0]->value()));
         } else if (operationname == "SIGMOID") {
-            input[0]->derivate(get_deri() * input[0]->value() * (1 - input[0]->value()));
+            input[0]->derivate(get_deri() *
+                input[0]->value() * (1 - input[0]->value()));
         } else if (operationname == "PRINT") {
             input[0]->derivate(get_deri());
         } else if (operationname == "ASSERT") {
-            if(input[0]->value() > 0) input[0]->derivate(get_deri() * 1.0);
-            else {
+            if (input[0]->value() > 0) {
+                input[0]->derivate(get_deri() * 1.0);
+            } else {
                 std::cout
-                << "ERROR: Assertion failed"
-                << std::endl;
+                << "ERROR: Assertion failed"<< std::endl;
             }
         }
     }
@@ -248,8 +258,7 @@ void singleoperation::derivate(double deri_value) {
 
 void binaryoperation::derivate(double deri_value) {
     set_deri(deri_value);
-    if(set_visit_num()) {
-        // debug 
+    if (set_visit_num()) {
         if (operationname == "+") {
             input[0]->derivate(get_deri() * 1);
             input[1]->derivate(get_deri() * 1);
@@ -261,7 +270,8 @@ void binaryoperation::derivate(double deri_value) {
             input[1]->derivate(get_deri() * input[0]->value());
         } else if (operationname == "/") {
             input[0]->derivate(get_deri() / input[1]->value());
-            input[1]->derivate(get_deri() * (- input[0]->value() / input[1]->value() / input[1]->value()));
+            input[1]->derivate(get_deri() *
+                (- input[0]->value() / input[1]->value() / input[1]->value()));
         } else if (operationname == ">") {
             input[0]->derivate(get_deri() > 0 ? get_deri() : -get_deri());
             input[1]->derivate(get_deri() > 0 ? -get_deri() : get_deri());
