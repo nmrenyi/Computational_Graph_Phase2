@@ -241,6 +241,8 @@ bool TensorConcatOperation::calculate() {
     if (flag1 && flag2) {
         std::vector<int> dim1 = input[0]->getDim();
         std::vector<int> dim2 = input[1]->getDim();
+        std::vector<double> data1 = input[0]->getData();
+        std::vector<double> data2 = input[1]->getData();
         int size1 = dim1.size();
         int size2 = dim2.size();
         if (size1 != size2) { // 两个tensor维数不一样，无法concat
@@ -257,8 +259,7 @@ bool TensorConcatOperation::calculate() {
         if (!canConcat) {
             return false;
         }
-        // 判断完成 这上边几行写的太丑了谁帮我改一改
-        
+
         // 比较简单地，先给出结点concat的dim
         dim = dim1;
         dim[concatWay] = dim1[concatWay] + dim2[concatWay];
@@ -277,11 +278,13 @@ bool TensorConcatOperation::calculate() {
         int N = 0; // 第N个回合，每个回合放入data1与data2中各一个组团
         while (placedNum != totalDataNum) {
             for (int i = 0; i < groupNum1; i++) {
-                thisdata.push_back(dim1[N*groupNum1+i]);
+                thisdata.push_back(data1[N*groupNum1+i]);
             }
             for (int i = 0; i < groupNum2; i++) {
-                thisdata.push_back(dim2[N*groupNum2+i]);
+                thisdata.push_back(data2[N*groupNum2+i]);
             }
+            placedNum += groupNum1;
+            placedNum += groupNum2;
             N++;
         }
         setData(thisdata);

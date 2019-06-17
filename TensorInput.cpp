@@ -140,7 +140,7 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
             << std::endl;
         }
 
-    } else if (buffer.size() == 5 && buffer[2] == "RESAHPE") { // a = RESHAPE b 3 
+    } else if (buffer.size() == 5 && buffer[2] == "RESHAPE") { // a = RESHAPE b 3 
         int aimDimNum = std::stoi(buffer[4]);
         std::vector<int> aimDim;
         int tmp;

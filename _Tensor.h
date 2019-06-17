@@ -75,7 +75,7 @@ class TensorReshapeOperation : public Tensor {
 class TensorConcatOperation : public Tensor {
  private:
     int concatWay;
- public:
+ public: 
     TensorConcatOperation(std::string target1, 
       std::string target2, int concatway, std::map<std::string, Tensor*>& save);
     bool calculate();
