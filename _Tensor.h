@@ -65,3 +65,18 @@ class TensorBinaryOperation : public Tensor {
       std::vector<int>dimInfo, std::map<std::string, Tensor*>& save);
     bool calculate();
 };
+
+class TensorReshapeOperation : public Tensor {
+ public:
+    TensorReshapeOperation(std::string target, std::vector<int> aimDim, std::map<std::string, Tensor*>& save);
+    bool calculate();
+};
+
+class TensorConcatOperation : public Tensor {
+ private:
+    int concatWay;
+ public: 
+    TensorConcatOperation(std::string target1, 
+      std::string target2, int concatway, std::map<std::string, Tensor*>& save);
+    bool calculate();
+};

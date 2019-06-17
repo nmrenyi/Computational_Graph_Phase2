@@ -194,3 +194,103 @@ std::vector<double> broadcast(std::vector<int>v,
     }
     return r;
 }
+
+// TensorReshapeOperation类成员函数的实现
+TensorReshapeOperation::TensorReshapeOperation(std::string target,
+    std::vector<int> aimDim, 
+    std::map<std::string, Tensor*>& save) {
+    input.push_back(save[target]);
+    // data = save[target]->getData();
+    dim = aimDim;
+}
+
+bool TensorReshapeOperation::calculate() {
+    if (calculated) {
+        return true;
+    }
+    bool flag = input[0]->calculate();
+    if (flag) {
+        if (getDataNum(dim) == getDataNum(input[0]->getDim())) {
+            data = input[0]->getData();
+            calculated = true;
+            return true;
+        } else {
+            std::cout << 
+            "Unable to reshape. The number of data is wrong."
+            << std::endl;
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+TensorConcatOperation::TensorConcatOperation(std::string target1, 
+    std::string target2, int concatway, std::map<std::string, Tensor*>& save){
+    concatWay = concatway;
+    input.push_back(save[target1]);
+    input.push_back(save[target2]);
+}
+
+bool TensorConcatOperation::calculate() {
+    if (calculated) {
+        return true;
+    }
+    bool flag1 = input[0]->calculate();
+    bool flag2 = input[1]->calculate();
+    if (flag1 && flag2) {
+        std::vector<int> dim1 = input[0]->getDim();
+        std::vector<int> dim2 = input[1]->getDim();
+        std::vector<double> data1 = input[0]->getData();
+        std::vector<double> data2 = input[1]->getData();
+        int size1 = dim1.size();
+        int size2 = dim2.size();
+        if (size1 != size2) { // 两个tensor维数不一样，无法concat
+            return false;
+        }
+        // 判断能否concat的条件：只有拼在一起的那个轴长度可以不一样，剩下都得一样
+        bool canConcat = 1;
+        for (int i = 0; i < size1 ; i++) {
+            if (i != concatWay && dim1[i] != dim2[i]) {
+                canConcat = 0;
+                break;
+            }
+        }
+        if (!canConcat) {
+            return false;
+        }
+
+        // 比较简单地，先给出结点concat的dim
+        dim = dim1;
+        dim[concatWay] = dim1[concatWay] + dim2[concatWay];
+
+        //然后给出data
+        int groupNum1 = 1;//每次向thisdata中加入一个组团的data数量
+        int groupNum2 = 1;
+        for (int i = size1-1; i != concatWay - 1; i--) {//计算两个groupNum
+            groupNum1 *= dim1[i]; 
+            groupNum2 *= dim2[i];
+        }
+        int totalDataNum = getDataNum(dim);//此concat后的结点的dataNum
+        
+        int placedNum = 0;// 已经向新data(thisdata)中放入的数字的数量
+        std::vector<double> thisdata;
+        int N = 0; // 第N个回合，每个回合放入data1与data2中各一个组团
+        while (placedNum != totalDataNum) {
+            for (int i = 0; i < groupNum1; i++) {
+                thisdata.push_back(data1[N*groupNum1+i]);
+            }
+            for (int i = 0; i < groupNum2; i++) {
+                thisdata.push_back(data2[N*groupNum2+i]);
+            }
+            placedNum += groupNum1;
+            placedNum += groupNum2;
+            N++;
+        }
+        setData(thisdata);
+        calculated = true;
+        return true;
+    } else {
+        return false;
+    }
+}

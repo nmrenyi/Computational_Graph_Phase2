@@ -121,7 +121,7 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
     if (buffer.size() == 4) {  // a = SIN x 单目运算符
         Tensor* single = new TensorSingleOperation(buffer[3], buffer[2], save);
         save[buffer[0]] = single;
-    } else if (buffer.size() == 5) {  // a = x + y 双目运算符
+    } else if (buffer.size() == 5 && buffer[2] != "RESHAPE") {  // a = x + y 双目运算符
         auto check = checkBroadcast(save[buffer[2]], save[buffer[4]]);
         if (check.first) {
             #ifdef debug
@@ -140,6 +140,29 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
             << std::endl;
         }
 
+    } else if (buffer.size() == 5 && buffer[2] == "RESHAPE") { // a = RESHAPE b 3 
+        int aimDimNum = std::stoi(buffer[4]);
+        std::vector<int> aimDim;
+        int tmp;
+        // int aimDataNum = 1;
+        for (int i = 0; i < aimDimNum; i++) {
+            std::cin >> tmp;
+            aimDim.push_back(tmp);
+            // aimDataNum *= tmp;
+        }
+        // if (aimDataNum == save[buffer[3]]->getData.size()) {
+        Tensor* reshape = new TensorReshapeOperation(buffer[3], aimDim, save);
+        save[buffer[0]] = reshape;
+        // } else {
+            // std::cout << 
+            // "Unable to reshape. The number of data is wrong."
+            // << std::endl;
+        // }
+
+    } else if (buffer.size() == 6) { // a = CONCAT b c 2
+        int concatway = std::stoi(buffer[5]);
+        Tensor* concat = new TensorConcatOperation(buffer[3], buffer[4], concatway, save);
+        save[buffer[0]] = concat;
     } else {
         std::cout << "invalid input type" << std::endl;
     }
