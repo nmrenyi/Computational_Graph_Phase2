@@ -108,9 +108,6 @@ class AssignOperation :public base {  // assign操作
         std::map <std::string, base*>& save) {
             input.push_back(save[a]);
             input.push_back(save[b]);
-                #ifdef DEBUG
-                std::cout << "hello in assign::assign" << std::endl;
-                #endif
         }
     // void derivate(double pre_deri_value);
     bool calculate();
