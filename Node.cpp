@@ -6,7 +6,7 @@
 #include <iomanip>
 #include "_Node.h"
 
-void base::reiscal() {
+void Base::reiscal() {
     deri_value = pres = visit_num = 0;
     iscal = false;
     // 递归调用清空所有被调用节点的计算状态
@@ -17,7 +17,7 @@ void base::reiscal() {
     }
 }
 
-bool base::set_visit_num() {
+bool Base::set_visit_num() {
     visit_num++;
     if (visit_num == pres)
         return true;
@@ -36,7 +36,7 @@ bool Placeholder::calculate() {
 }
 
 
-bool singleoperation::calculate() {
+bool SingleOperation::calculate() {
     pres++;  // 前驱节点数目加一
     // 判断此节点是否被调用过，保证一个节点只计算一次
     if (iscalculated())
@@ -82,7 +82,7 @@ bool singleoperation::calculate() {
     }
 }
 
-bool binaryoperation::calculate() {
+bool BinaryOperation::calculate() {
     pres++;  // 前驱节点数目加一
     // 判断此节点是否被调用过，保证一个节点只计算一次
     if (iscalculated())
@@ -140,7 +140,7 @@ bool binaryoperation::calculate() {
     }
 }
 
-bool bindoperation::calculate() {
+bool BindOperation::calculate() {
     if (iscalculated())
         return true;
     bool flag = (input[0]->calculate()) && (input[1]->calculate());
@@ -198,8 +198,8 @@ bool COND::calculate() {
 bool GRAD::calculate() {
     if (iscalculated())
         return true;
-    if (input[0]->calculate()) { // 先计算
-        this->derivate(1.0); // 再求导
+    if (input[0]->calculate()) {  // 先计算
+        this->derivate(1.0);  // 再求导
         iscal = true;
         return true;
     }
@@ -209,28 +209,28 @@ bool GRAD::calculate() {
 bool AT::calculate() {
     if (iscalculated())
         return true;
-    if (input[0]->calculate()) { // 调用GRAD的计算
-        set(input[1]->get_deri()); // 赋值相对应的导数
+    if (input[0]->calculate()) {  // 调用GRAD的计算
+        set(input[1]->get_deri());  // 赋值相对应的导数
         return true;
     }
     return false;
 }
 
 void Placeholder::derivate(double deri_value) {
-    set_deri(deri_value); // 对自身节点导数累加
+    set_deri(deri_value);  // 对自身节点导数累加
 }
 
 void Variable::derivate(double deri_value) {
-    set_deri(deri_value); // 对自身节点导数累加
+    set_deri(deri_value);  // 对自身节点导数累加
 }
 
 void Constant::derivate(double deri_value) {
-    set_deri(deri_value); // 对自身节点导数累加
+    set_deri(deri_value);  // 对自身节点导数累加
 }
 
-void singleoperation::derivate(double deri_value) {
-    set_deri(deri_value); // 先累加之前的导数
-    if (set_visit_num()) { // 判断是否前驱都访问完毕，否则不开始计算导数
+void SingleOperation::derivate(double deri_value) {
+    set_deri(deri_value);  // 先累加之前的导数
+    if (set_visit_num()) {  // 判断是否前驱都访问完毕，否则不开始计算导数
         if (operationname == "SIN") {
             input[0]->derivate(get_deri() * cos(input[0]->value()));
         } else if (operationname == "LOG") {
@@ -256,9 +256,9 @@ void singleoperation::derivate(double deri_value) {
     }
 }
 
-void binaryoperation::derivate(double deri_value) {
-    set_deri(deri_value); // 先累加之前的导数
-    if (set_visit_num()) { // 判断是否前驱都访问完毕，否则不开始计算导数
+void BinaryOperation::derivate(double deri_value) {
+    set_deri(deri_value);  // 先累加之前的导数
+    if (set_visit_num()) {  // 判断是否前驱都访问完毕，否则不开始计算导数
         if (operationname == "+") {
             input[0]->derivate(get_deri() * 1);
             input[1]->derivate(get_deri() * 1);
@@ -291,10 +291,15 @@ void binaryoperation::derivate(double deri_value) {
     }
 }
 
-void bindoperation::derivate(double deri_value) {
+void BindOperation::derivate(double deri_value) {
     set_deri(deri_value);
     input[0]->derivate(get_deri());
     input[1]->derivate(1.0);
+}
+
+void AssignOperation::derivate(double deri_value) {
+    set_deri(deri_value);
+    input[0]->derivate(get_deri());
 }
 
 void COND::derivate(double deri_value) {
@@ -306,6 +311,10 @@ void COND::derivate(double deri_value) {
 
 void GRAD::derivate(double deri_value) {
     set_deri(deri_value);
-    input[0]->derivate(get_deri()); // 从根节点反向传播求导
+    input[0]->derivate(get_deri());  // 从根节点反向传播求导
 }
 
+void AT::derivate(double deri_value) {
+    set_deri(deri_value);
+    input[0]->derivate(get_deri());
+}

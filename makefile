@@ -15,7 +15,7 @@ main3: mainNewton.o newtonMethod.o Node.o _Node.h
 	g++ -o main3 mainNewton.o newtonMethod.o Node.o -std=c++14 -Wall
 
 main4: mainTensor.o Tensor.o TensorInput.o _Tensor.h
-	g++ mainTensor.o Tensor.o TensorInput.o -o main4
+	g++ -o main4 mainTensor.o Tensor.o TensorInput.o
 
 main5: sesMain.cpp session.cpp Node.o _Session.h _Input.h _Node.h
 	g++ -o main5 sesMain.cpp session.cpp Node.o -std=c++14 -Wall
@@ -39,10 +39,10 @@ mainTensor.o: mainTensor.cpp _Tensor.h
 	g++ -c mainTensor.cpp -Wall
 
 TensorInput.o: tensorInput.cpp _Tensor.h
-	g++ -c tensorInput.cpp -Wall
+	g++ -o TensorInput.o -c tensorInput.cpp -Wall
 
 Tensor.o: tensor.cpp _Tensor.h
-	g++ -c tensor.cpp -Wall
+	g++ -o Tensor.o -c tensor.cpp -Wall
 
 clean_w:
 	del *.exe *.o

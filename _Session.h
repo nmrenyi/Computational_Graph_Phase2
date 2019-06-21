@@ -11,9 +11,9 @@
 class Session {
 public:
     std::stringstream in; // 保存文件建图的字符串
-    std::map <std::string, base*> save;
+    std::map <std::string, Base*> save;
     std::map <int, double> answer;
-    std::vector <base*> save_for_delete;
+    std::vector <Base*> save_for_delete;
     Session();
     Session(std::stringstream& ss);
     ~Session();

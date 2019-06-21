@@ -194,9 +194,10 @@ bool TensorReshapeOperation::calculate() {
         return true;
     }
     bool flag = input[0]->calculate();
-    if (flag) { //前置节点均可计算并已计算完毕
-        if (getDataNum(dim) == getDataNum(input[0]->getDim())) { //数据量相同时可以reshape
-            data = input[0]->getData(); // data不需变化
+    if (flag) {  // 前置节点均可计算并已计算完毕
+        // 数据量相同时可以reshape
+        if (getDataNum(dim) == getDataNum(input[0]->getDim())) {
+            data = input[0]->getData();  // data不需变化
             calculated = true;
             return true;
         } else {
@@ -225,16 +226,18 @@ bool TensorConcatOperation::calculate() {
     }
     bool flag1 = input[0]->calculate();
     bool flag2 = input[1]->calculate();
-    if (flag1 && flag2) { // 两个前置结点均可计算并已计算完毕
-        std::vector<int> dim1 = input[0]->getDim(); // 每一维数据量的vector
-        std::vector<int> dim2 = input[1]->getDim(); 
-        std::vector<double> data1 = input[0]->getData(); // Tensor中所有数据
+    if (flag1 && flag2) {  // 两个前置结点均可计算并已计算完毕
+        std::vector<int> dim1 = input[0]->getDim();  // 每一维数据量的vector
+        std::vector<int> dim2 = input[1]->getDim();
+        std::vector<double> data1 = input[0]->getData();  // Tensor中所有数据
         std::vector<double> data2 = input[1]->getData();
-        int size1 = dim1.size(); 
+        int size1 = dim1.size();
         int size2 = dim2.size();
         if (size1 != size2) {  // 两个tensor维数不一样，无法concat
             return false;
-            std::cout << "Unable to concat. The number of dimension is not same." << std::endl;
+            std::cout <<
+            "Unable to concat. The number of dimension is not same."
+            << std::endl;
         }
         // 判断能否concat的条件：只有拼在一起的那个轴长度可以不一样，剩下都得一样
         bool canConcat = 1;
@@ -245,7 +248,9 @@ bool TensorConcatOperation::calculate() {
             }
         }
         if (!canConcat) {
-            std::cout << "Unable to concat. The size of the axis to concat is not same." << std::endl;
+            std::cout <<
+            "Unable to concat. The size of the axis to concat is not same."
+            << std::endl;
             return false;
         }
 
@@ -256,7 +261,7 @@ bool TensorConcatOperation::calculate() {
         // 然后给出data
         int groupNum1 = 1;  // 每次向thisdata中加入一个组团的data数量
         int groupNum2 = 1;
-        for (int i = size1-1; i != concatWay - 1; i--) {//计算两个groupNum
+        for (int i = size1-1; i != concatWay - 1; i--) {  // 计算两个groupNum
             groupNum1 *= dim1[i];
             groupNum2 *= dim2[i];
         }
@@ -276,7 +281,7 @@ bool TensorConcatOperation::calculate() {
             placedNum += groupNum2;
             N++;
         }
-        setData(thisdata); // 赋值新结点data
+        setData(thisdata);  // 赋值新结点data
         calculated = true;
         return true;
     } else {

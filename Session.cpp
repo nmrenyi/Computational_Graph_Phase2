@@ -43,19 +43,19 @@ void Session::Ses_InputNode() {
     }
     switch (type) {  //判断输入的变量的类型
         case 'P': {
-            base* Newplace = new Placeholder;
+            Base* Newplace = new Placeholder;
             save[name] = Newplace;
         }
         break;
         case 'C': {
             double value;
             in >> value;
-            base* Newconstant = new Constant(value);
+            Base* Newconstant = new Constant(value);
             save[name] = Newconstant;
         }
         break;
         case 'V': {
-            base* Newvariable = new Variable;
+            Base* Newvariable = new Variable;
             save[name] = Newvariable;
             double value;
             in >> value;
@@ -80,30 +80,30 @@ void Session::Ses_Inputoperate() {
     }
 
     if (buffer[2] == "GRAD") {  // GRAD
-        base* gradname = new GRAD(buffer[3], save);
+        Base* gradname = new GRAD(buffer[3], save);
         save[buffer[0]] = gradname;
     } else if (buffer[3] == "AT") {  // AT
-        base* atname = new AT(buffer[2], buffer[4], save);
+        Base* atname = new AT(buffer[2], buffer[4], save);
         save[buffer[0]] = atname;
     } else if (buffer.size() == 4) {  // 单目运算符
-        base* singlename = new singleoperation(buffer[3], buffer[2], save);
+        Base* singlename = new SingleOperation(buffer[3], buffer[2], save);
         save[buffer[0]] = singlename;
     } else if (buffer.size() == 5) {  // 双目运算符
         if (buffer[2] == "BIND") {
-            base* bindname =
-            new bindoperation(buffer[3], buffer[4], save);
+            Base* bindname =
+            new BindOperation(buffer[3], buffer[4], save);
             save[buffer[0]] = bindname;
         } else if (buffer[2] == "ASSIGN") {  // ASSIGN 操作
-            base* assignName =
+            Base* assignName =
             new AssignOperation(buffer[3], buffer[4], save);
             save[buffer[0]] = assignName;
         } else {
-            base* binaryname =
-            new binaryoperation(buffer[2], buffer[4], buffer[3], save);
+            Base* binaryname =
+            new BinaryOperation(buffer[2], buffer[4], buffer[3], save);
             save[buffer[0]] = binaryname;
         }
     } else if (buffer.size() == 6) {  // COND
-        base* condname =
+        Base* condname =
         new COND(buffer[3], buffer[4], buffer[5], buffer[0], save);
         save[buffer[0]] = condname;
     }

@@ -12,7 +12,7 @@ int getDataNum(std::vector<int>dim) {
     }
     return tmp;
 }
-void InputNode(std::map<std::string, Tensor*>& save) {
+void inputNode(std::map<std::string, Tensor*>& save) {
     std::string name;
     char type;
     int dimNum = 0;
@@ -86,7 +86,7 @@ std::pair<bool, std::vector<int>> checkBroadcast(Tensor* ptr1, Tensor* ptr2) {
     return std::make_pair(true, tmp);
 }
 
-void Inputoperate(std::map<std::string, Tensor*>& save) {
+void inputOperate(std::map<std::string, Tensor*>& save) {
     std::string str;
     std::string tmp;
     std::vector <std::string> buffer;  // 用sstream存储当前输入的关键信息
@@ -98,7 +98,8 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
     if (buffer.size() == 4) {  // a = SIN x 单目运算符
         Tensor* single = new TensorSingleOperation(buffer[3], buffer[2], save);
         save[buffer[0]] = single;
-    } else if (buffer.size() == 5 && buffer[2] != "RESHAPE") {  // a = x + y 双目运算符
+    } else if (buffer.size() == 5 && buffer[2] != "RESHAPE") {
+        // a = x + y 双目运算符
         auto check = checkBroadcast(save[buffer[2]], save[buffer[4]]);
         if (check.first) {
             Tensor* binary =
@@ -111,7 +112,8 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
             << std::endl;
         }
 
-    } else if (buffer.size() == 5 && buffer[2] == "RESHAPE") {  // a = RESHAPE b 3 
+    } else if (buffer.size() == 5 && buffer[2] == "RESHAPE") {
+        // a = RESHAPE b 3
         int aimDimNum = std::stoi(buffer[4]);
         std::vector<int> aimDim;
         int tmp;
@@ -124,7 +126,8 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
         getchar();
     } else if (buffer.size() == 6) {  // a = CONCAT b c 2
         int concatway = std::stoi(buffer[5]);
-        Tensor* concat = new TensorConcatOperation(buffer[3], buffer[4], concatway, save);
+        Tensor* concat =
+        new TensorConcatOperation(buffer[3], buffer[4], concatway, save);
         save[buffer[0]] = concat;
     } else {
         std::cout << "invalid input type" << std::endl;
@@ -150,7 +153,7 @@ void changePara(std::map<std::string, Tensor*>& save, std::string info) {
     }
 }
 
-void Inputevalnum(int answer_num, std::map<std::string, Tensor*>& save) {
+void inputEvalNum(int answer_num, std::map<std::string, Tensor*>& save) {
     std::string str;
     std::string tmp;
     std::vector<std::string> buffer;  // buffer为储存赋值运算的vector

@@ -543,8 +543,8 @@ _TEST_FILE_SUFFIX = '(' + '|'.join(_test_suffixes) + r')$'
 # Pattern that matches only complete whitespace, possibly across multiple lines.
 _EMPTY_CONDITIONAL_BODY_PATTERN = re.compile(r'^\s*$', re.DOTALL)
 
-# Assertion macros.  These are defined in base/logging.h and
-# testing/base/public/gunit.h.
+# Assertion macros.  These are defined in Base/logging.h and
+# testing/Base/public/gunit.h.
 _CHECK_MACROS = [
     'DCHECK', 'CHECK',
     'EXPECT_TRUE', 'ASSERT_TRUE',
@@ -1382,7 +1382,7 @@ class FileInfo(object):
     return (project,) + os.path.splitext(rest)
 
   def BaseName(self):
-    """File base name - text after the final slash, before the final period."""
+    """File Base name - text after the final slash, before the final period."""
     return self.Split()[1]
 
   def Extension(self):
@@ -2439,7 +2439,7 @@ class _BlockInfo(object):
     """Run checks that applies to text up to the opening brace.
 
     This is mostly for checking the text after the class identifier
-    and the "{", usually where the base class is specified.  For other
+    and the "{", usually where the Base class is specified.  For other
     blocks, there isn't much to check, so we always pass.
 
     Args:
@@ -3923,7 +3923,7 @@ def CheckSectionSpacing(filename, clean_lines, class_info, linenum, error):
         not Search(r'\b(class|struct)\b', prev_line) and
         not Search(r'\\$', prev_line)):
       # Try a bit harder to find the beginning of the class.  This is to
-      # account for multi-line base-specifier lists, e.g.:
+      # account for multi-line Base-specifier lists, e.g.:
       #   class Derived
       #       : public Base {
       end_class_head = class_info.starting_linenum
@@ -4139,8 +4139,8 @@ def CheckTrailingSemicolon(filename, clean_lines, linenum, error):
     # Matched closing parenthesis (case 1).  Check the token before the
     # matching opening parenthesis, and don't warn if it looks like a
     # macro.  This avoids these false positives:
-    #  - macro that defines a base class
-    #  - multi-line macro that defines a base class
+    #  - macro that defines a Base class
+    #  - multi-line macro that defines a Base class
     #  - macro that defines the whole class-head
     #
     # But we still issue warnings for macros that we know are safe to
@@ -5673,13 +5673,13 @@ def FilesBelongToSameModule(filename_cc, filename_h):
   to belong to the same module here.
 
   If the filename_cc contains a longer path than the filename_h, for example,
-  '/absolute/path/to/base/sysinfo.cc', and this file would include
-  'base/sysinfo.h', this function also produces the prefix needed to open the
+  '/absolute/path/to/Base/sysinfo.cc', and this file would include
+  'Base/sysinfo.h', this function also produces the prefix needed to open the
   header. This is used by the caller of this function to more robustly open the
   header file. We don't have access to the real include paths in this context,
   so we need this guesswork here.
 
-  Known bugs: tools/base/bar.cc and base/bar.h belong to the same module
+  Known bugs: tools/Base/bar.cc and Base/bar.h belong to the same module
   according to this implementation. Because of this, this function gives
   some false positives. This should be sufficiently rare in practice.
 
@@ -5888,14 +5888,14 @@ def CheckRedundantVirtual(filename, clean_lines, linenum, error):
   if not virtual: return
 
   # Ignore "virtual" keywords that are near access-specifiers.  These
-  # are only used in class base-specifier and do not apply to member
+  # are only used in class Base-specifier and do not apply to member
   # functions.
   if (Search(r'\b(public|protected|private)\s+$', virtual.group(1)) or
       Match(r'^\s+(public|protected|private)\b', virtual.group(3))):
     return
 
-  # Ignore the "virtual" keyword from virtual base classes.  Usually
-  # there is a column on the same line in these cases (virtual base
+  # Ignore the "virtual" keyword from virtual Base classes.  Usually
+  # there is a column on the same line in these cases (virtual Base
   # classes are rare in google3 because multiple inheritance is rare).
   if Match(r'^.*[^:]:[^:].*$', line): return
 

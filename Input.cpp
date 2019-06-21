@@ -8,13 +8,13 @@
 #include <iomanip>
 
 // 存储结点名称到相应类对象的映射
-std::map <std::string, base*> save;
+std::map <std::string, Base*> save;
 // 如果有输出值，存储当前对应操作数的输出结果
 std::map <int, double> answer;
 // 存储结点重名时将即将被覆盖的结点存储起来，便于释放内存
-std::vector <base*> save_for_delete;
+std::vector <Base*> save_for_delete;
 
-void InputNode() {
+void inputNode() {
     std::string name;
     char type;
     std::cin >> name;
@@ -26,19 +26,19 @@ void InputNode() {
     }
     switch (type) {  // 判断输入的变量的类型
         case 'P': {
-            base* Newplace = new Placeholder;
+            Base* Newplace = new Placeholder;
             save[name] = Newplace;
         }
         break;
         case 'C': {
             double value;
             std::cin >> value;
-            base* Newconstant = new Constant(value);
+            Base* Newconstant = new Constant(value);
             save[name] = Newconstant;
         }
         break;
         case 'V': {
-            base* Newvariable = new Variable;
+            Base* Newvariable = new Variable;
             save[name] = Newvariable;
             double value;
             std::cin >> value;
@@ -48,7 +48,7 @@ void InputNode() {
     }
 }
 
-void Inputoperate() {
+void inputOperate() {
     std::string str;
     std::string tmp;
     std::vector <std::string> buffer;  // 用sstream存储当前输入的关键信息
@@ -63,36 +63,36 @@ void Inputoperate() {
     }
 
     if (buffer[2] == "GRAD") {  // GRAD
-        base* gradname = new GRAD(buffer[3], save);
+        Base* gradname = new GRAD(buffer[3], save);
         save[buffer[0]] = gradname;
     } else if (buffer[3] == "AT") {  // AT
-        base* atname = new AT(buffer[2], buffer[4], save);
+        Base* atname = new AT(buffer[2], buffer[4], save);
         save[buffer[0]] = atname;
     } else if (buffer.size() == 4) {  // 单目运算符
-        base* singlename = new singleoperation(buffer[3], buffer[2], save);
+        Base* singlename = new SingleOperation(buffer[3], buffer[2], save);
         save[buffer[0]] = singlename;
     } else if (buffer.size() == 5) {  // 双目运算符
         if (buffer[2] == "BIND") {
-            base* bindname =
-            new bindoperation(buffer[3], buffer[4], save);
+            Base* bindname =
+            new BindOperation(buffer[3], buffer[4], save);
             save[buffer[0]] = bindname;
         } else if (buffer[2] == "ASSIGN") {  // ASSIGN 操作
-            base* assignName =
+            Base* assignName =
             new AssignOperation(buffer[3], buffer[4], save);
             save[buffer[0]] = assignName;
         } else {
-            base* binaryname =
-            new binaryoperation(buffer[2], buffer[4], buffer[3], save);
+            Base* binaryname =
+            new BinaryOperation(buffer[2], buffer[4], buffer[3], save);
             save[buffer[0]] = binaryname;
         }
     } else if (buffer.size() == 6) {  // COND
-        base* condname =
+        Base* condname =
         new COND(buffer[3], buffer[4], buffer[5], buffer[0], save);
         save[buffer[0]] = condname;
     }
 }
 
-void Inputevalnum(int answer_num) {
+void inputEvalNum(int answer_num) {
     std::string str;
     std::string tmp;
     std::vector<std::string> buffer;
