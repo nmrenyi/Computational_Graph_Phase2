@@ -65,11 +65,10 @@ std::pair<bool, std::vector<int>> checkBroadcast(Tensor* ptr1, Tensor* ptr2) {
     std::vector<int> tmpDim1 = ptr1->getDim();
     std::vector<int> tmpDim2 = ptr2->getDim();
     std::vector<int>tmp;  // 储存加节点的维数信息
-    std::vector<int> dim1 = (tmpDim1.size() > tmpDim2.size())
+    std::vector<int> dim1 = (tmpDim1.size() >= tmpDim2.size())
         ? tmpDim1 : tmpDim2;
     std::vector<int> dim2 = (tmpDim1.size() < tmpDim2.size())
         ? tmpDim1 : tmpDim2;
-
     int minus = dim1.size() - dim2.size();
     std::vector<int> another(minus, 1);
     dim2.insert(dim2.begin(), another.begin(), another.end());
@@ -108,11 +107,11 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
             save[buffer[0]] = binary;
         } else {
             std::cout <<
-            "Unable to broadcast. Node defining failed"
+            "Unable to broadcast. Node \"" << buffer[0] <<"\" defining failed"
             << std::endl;
         }
 
-    } else if (buffer.size() == 5 && buffer[2] == "RESHAPE") { // a = RESHAPE b 3 
+    } else if (buffer.size() == 5 && buffer[2] == "RESHAPE") {  // a = RESHAPE b 3 
         int aimDimNum = std::stoi(buffer[4]);
         std::vector<int> aimDim;
         int tmp;
@@ -176,8 +175,6 @@ void Inputevalnum(int answer_num, std::map<std::string, Tensor*>& save) {
                 subString += buffer[i];
                 subString += " ";
             }
-            std::cout << "before giving para"
-            << std::endl << subString << std::endl;
             changePara(save, subString);
             for (int i = 0; i < paraNum - 1; i++) {
                 std::string strInfo;

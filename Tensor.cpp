@@ -12,8 +12,27 @@ std::vector<int> Tensor:: getDim() const {
     return dim;
 }
 void Tensor::display() const {
-    for (auto x : data) {
-        std::cout << x << " ";
+    if (dim.size() == 1) {
+        std::cout << "[" << data[0] << "]" << std::endl;
+    } else if (dim.size() == 2) {
+        std::cout << "[";
+        for (int i = 0; i < dim[0]; i++) {
+            std::cout << "[";
+                for (int j = 0; j < dim[1] - 1; j++) {
+                    std::cout << data[i * dim[1] + j] << ", ";
+                }
+                std::cout << data[i * dim[1] + dim[1] - 1];
+            std::cout << "]";
+            if (i != dim[0] - 1) {
+                std::cout << "," << std::endl;
+            }
+        }
+        std::cout << "]" << std::endl;
+    } else {
+        std::cout << "trivial output method:" << std::endl;
+        for (auto x : data) {
+            std::cout << x << " ";
+        }
     }
     std::cout << std::endl;
 }
