@@ -198,8 +198,8 @@ bool COND::calculate() {
 bool GRAD::calculate() {
     if (iscalculated())
         return true;
-    if (input[0]->calculate()) { // 先计算
-        this->derivate(1.0); // 再求导
+    if (input[0]->calculate()) {  // 先计算
+        this->derivate(1.0);  // 再求导
         iscal = true;
         return true;
     }
@@ -209,28 +209,28 @@ bool GRAD::calculate() {
 bool AT::calculate() {
     if (iscalculated())
         return true;
-    if (input[0]->calculate()) { // 调用GRAD的计算
-        set(input[1]->get_deri()); // 赋值相对应的导数
+    if (input[0]->calculate()) {  // 调用GRAD的计算
+        set(input[1]->get_deri());  // 赋值相对应的导数
         return true;
     }
     return false;
 }
 
 void Placeholder::derivate(double deri_value) {
-    set_deri(deri_value); // 对自身节点导数累加
+    set_deri(deri_value);  // 对自身节点导数累加
 }
 
 void Variable::derivate(double deri_value) {
-    set_deri(deri_value); // 对自身节点导数累加
+    set_deri(deri_value);  // 对自身节点导数累加
 }
 
 void Constant::derivate(double deri_value) {
-    set_deri(deri_value); // 对自身节点导数累加
+    set_deri(deri_value);  // 对自身节点导数累加
 }
 
 void singleoperation::derivate(double deri_value) {
-    set_deri(deri_value); // 先累加之前的导数
-    if (set_visit_num()) { // 判断是否前驱都访问完毕，否则不开始计算导数
+    set_deri(deri_value);  // 先累加之前的导数
+    if (set_visit_num()) {  // 判断是否前驱都访问完毕，否则不开始计算导数
         if (operationname == "SIN") {
             input[0]->derivate(get_deri() * cos(input[0]->value()));
         } else if (operationname == "LOG") {
@@ -257,8 +257,8 @@ void singleoperation::derivate(double deri_value) {
 }
 
 void binaryoperation::derivate(double deri_value) {
-    set_deri(deri_value); // 先累加之前的导数
-    if (set_visit_num()) { // 判断是否前驱都访问完毕，否则不开始计算导数
+    set_deri(deri_value);  // 先累加之前的导数
+    if (set_visit_num()) {  // 判断是否前驱都访问完毕，否则不开始计算导数
         if (operationname == "+") {
             input[0]->derivate(get_deri() * 1);
             input[1]->derivate(get_deri() * 1);
@@ -306,6 +306,6 @@ void COND::derivate(double deri_value) {
 
 void GRAD::derivate(double deri_value) {
     set_deri(deri_value);
-    input[0]->derivate(get_deri()); // 从根节点反向传播求导
+    input[0]->derivate(get_deri());  // 从根节点反向传播求导
 }
 
