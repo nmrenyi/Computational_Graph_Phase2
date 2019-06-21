@@ -15,13 +15,11 @@ main2: main.o Input.o Node.o _Input.h _Node.h
 main3: mainNewton.o newtonMethod.o Node.o _Node.h
 	g++ -o main3 mainNewton.o newtonMethod.o Node.o -std=c++14 -Wall
 
-<<<<<<< HEAD
-main5: Ses_main.cpp Session.cpp Node.o Session.h Input.h Node.h
-	g++ -o main5 Ses_main.cpp Session.cpp Node.o -std=c++14 -Wall
-=======
 main4: mainTensor.o Tensor.o TensorInput.o _Tensor.h
 	g++ mainTensor.o Tensor.o TensorInput.o -o main4
->>>>>>> master
+
+main5: Ses_main.cpp Session.cpp Node.o Session.h Input.h Node.h
+	g++ -o main5 Ses_main.cpp Session.cpp Node.o -std=c++14 -Wall
 
 main4d: mainTensor.cpp Tensor.cpp TensorInput.cpp _Tensor.h
 	g++ mainTensor.cpp Tensor.cpp TensorInput.cpp -o main4d -D debug -Wall
