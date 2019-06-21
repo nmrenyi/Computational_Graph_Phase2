@@ -297,6 +297,11 @@ void BindOperation::derivate(double deri_value) {
     input[1]->derivate(1.0);
 }
 
+void AssignOperation::derivate(double deri_value) {
+    set_deri(deri_value);
+    input[0]->derivate(get_deri());
+}
+
 void COND::derivate(double deri_value) {
     set_deri(deri_value);
     input[0]->derivate(0);
@@ -309,3 +314,7 @@ void GRAD::derivate(double deri_value) {
     input[0]->derivate(get_deri());  // 从根节点反向传播求导
 }
 
+void AT::derivate(double deri_value) {
+    set_deri(deri_value);
+    input[0]->derivate(get_deri());
+}
