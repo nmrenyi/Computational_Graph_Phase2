@@ -21,18 +21,10 @@ class Tensor {
 };
 
 class TensorConstant : public Tensor {
- private:
-      // const std::vector<double> data;  // 储存Tensor内部的所有值
-      // const std::vector<int>dim;  // 每一维的大小
  public:
     TensorConstant(std::vector<int>dimInfo, std::vector<double>dataInfo);
     void setData() = delete;
     bool calculate();
-    // 未能成功实现Constant对象，原因是这些重写的函数无法获得自己内部的Constant
-
-      // void setData(std::vector<double>) = delete;
-      // std::vector<double> getData();
-      // std::vector<int> getDim();
 };
 
 class TensorPlaceholder : public Tensor {

@@ -12,14 +12,12 @@ std::vector<int> Tensor:: getDim() const {
     return dim;
 }
 void Tensor::display() const {
-    #ifdef debug
-    std::cout << "in display, data.size() = " << data.size()  << std::endl;
-    #endif
     for (auto x : data) {
         std::cout << x << " ";
     }
     std::cout << std::endl;
 }
+
 void Tensor::setData(std::vector<double> data_) {
     data = data_;
     calculated = true;
@@ -28,35 +26,18 @@ std::vector<double> Tensor::getData() const {
     return data;
 }
 
-
 Tensor::~Tensor() {}
-
 
 // TensorConstant类成员函数的实现
 TensorConstant:: TensorConstant(std::vector<int>dimInfo,
     std::vector<double>dataInfo) {
     dim = dimInfo;
     data = dataInfo;
-    #ifdef debug
-        std::cout << "Constant built" << std::endl;
-    #endif
 }
-
-// std::vector<double> TensorConstant::getData() {
-//     return data;
-// }
-
-// std::vector<int> TensorConstant:: getDim() {
-//     #ifdef debug
-//         std::cout << "getting dim = " << dim.size() << std::endl;
-//     #endif
-//     return dim;
-// }
 
 bool TensorConstant:: calculate() {  // 常量始终可算
     return true;
 }
-
 
 // TensorPlaceholder类成员函数的实现
 TensorPlaceholder::TensorPlaceholder(std::vector<int>dimInfo) {
@@ -154,21 +135,6 @@ std::vector<double> broadcast(std::vector<int>v,
     }
     std::vector<double> r = data;
     if (v.size() == standard.size()) {
-        // 未能实现任一维数的broadcast
-        // for (int i = standard.size() - 1; i >= 0; i++) {
-        //     if (v[i] != standard[i]) {
-        //         int minus = standard[i] - v[i];
-        //         std::vector<int>tmp(standard.begin(),
-                // standard.begin() + i - 1);
-        //         int num = getDataNum(tmp);
-        //         for (int j = num; j > 0; j--) {
-        //             int target = *(r.begin() + j - 1);
-        //             std::vector<int>includes()
-        //             std::vector<double>another(r.begin(),
-                        // r.begin() + v[i], );
-        //         }
-        //     }
-        // }
         if (v[1] != standard[1]) {  // 第二维大小不同
             int minus = standard[1]- v[1];  // 要复制多少个这个元素
             for (int i = v[0]; i > 0; i--) {  // 有这么多元素需要复制
