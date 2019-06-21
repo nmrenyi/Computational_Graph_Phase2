@@ -48,11 +48,10 @@ void Session::Ses_InputNode() {
         }
         break;
         case 'C': {
-            base* Newconstant = new Constant;
-            save[name] = Newconstant;
             double value;
             in >> value;
-            Newconstant->set(value);
+            base* Newconstant = new Constant(value);
+            save[name] = Newconstant;
         }
         break;
         case 'V': {

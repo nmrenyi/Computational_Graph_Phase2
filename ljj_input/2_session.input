@@ -1,0 +1,30 @@
+2
+x V 1.0
+y V 1.0
+3
+a = x + y
+b = a + x
+c = b + y
+0
+EVAL a
+RUN b
+EVAL c 2 x 1.1 y 1.1
+SES 2_ses 2 x 2.0 y 2.0
+EVAL a
+EVAL b 2 x 2.2 y 2.2
+RUN c
+SES default_session 0
+RUN a
+EVAL b
+EVAL c
+SES 3_ses 2 x 3.0 y 3.0
+EVAL a
+EVAL b
+RUN c
+SES 2_ses 0
+RUN a
+EVAL b 2 x 2.3 y 2.3
+EVAL c
+EOF
+
+本文件使用main5运行

@@ -37,7 +37,7 @@ class base {
 
 class Constant :public base {
  public:
-    explicit Constant(double x) {
+    Constant(double x) {
         output_value = x;
         iscal = true;
     }

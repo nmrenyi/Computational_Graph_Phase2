@@ -1,5 +1,5 @@
-#include "Input.h"
-#include "Node.h"
+#include "_Input.h"
+#include "_Node.h"
 #include "Session.h"
 #include <iostream>
 #include <map>
@@ -26,11 +26,10 @@ void InputNode() {
         }
         break;
         case 'C': {
-            base* Newconstant = new Constant;
-            d_Ses.save[name] = Newconstant;
             double value;
             std::cin >> value; d_Ses.in << value << "\n";
-            Newconstant->set(value);
+            base* Newconstant = new Constant(value);
+            d_Ses.save[name] = Newconstant;
         }
         break;
         case 'V': {
@@ -160,12 +159,12 @@ int main() {
         std::map<std::string, Session*> my_ses;
         int i = 0;
         Session* Now_Ses = &d_Ses;
-        my_ses["default_session"] = Now_Ses;
+        my_ses["default_session"] = Now_Ses; // 建立默认的session为default_session
         while(1) {
             int check = Now_Ses->Ses_Inputevalnum(i++);
-            if(!check) break;
-            else if (check == 1) ;
-            else if (check == 2) {
+            if(!check) break; // 遇到EOF，停止EVAL
+            else if (check == 1) ; // 转换或者直接建立session，无参数读入
+            else if (check == 2) { // 表明有数据需要读入，开始读入
                 std::string name;
                 std::cin >> name;
                 if(my_ses.find(name) == my_ses.end()) {
@@ -177,18 +176,16 @@ int main() {
                 i = Now_Ses->answer.size();
                 int op_num; std::cin >> op_num;
                 while(op_num--) {
-                    // 待完成
                     std::string n; std::cin >> n;
                     double v; std::cin >> v;
                     Now_Ses->save[n]->set(v);
                 }
-            } else if (check == 3) { // Run();
+            } else if (check == 3) { // Run()，正常的EVAL计算
                 std::string name;
                 std::cin >> name;
                 Now_Ses->run(name, i++);
             }
         }
     }
-    // delete_memory();  // 释放内存
     return 0;
 }
