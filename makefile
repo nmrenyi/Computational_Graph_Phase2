@@ -39,10 +39,10 @@ mainTensor.o: mainTensor.cpp _Tensor.h
 	g++ -c mainTensor.cpp -Wall
 
 TensorInput.o: tensorInput.cpp _Tensor.h
-	g++ -c tensorInput.cpp -Wall
+	g++ -o TensorInput.o -c tensorInput.cpp -Wall
 
 Tensor.o: tensor.cpp _Tensor.h
-	g++ -c tensor.cpp -Wall
+	g++ -o Tensor.o -c tensor.cpp -Wall
 
 clean_w:
 	del *.exe *.o
