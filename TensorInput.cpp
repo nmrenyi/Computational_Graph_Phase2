@@ -159,7 +159,7 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
             // << std::endl;
         // }
 
-    } else if (buffer.size() == 6) { // a = CONCAT b c 2
+    } else if (buffer.size() == 6) {  // a = CONCAT b c 2
         int concatway = std::stoi(buffer[5]);
         Tensor* concat = new TensorConcatOperation(buffer[3], buffer[4], concatway, save);
         save[buffer[0]] = concat;

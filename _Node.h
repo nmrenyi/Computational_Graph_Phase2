@@ -37,10 +37,10 @@ class base {
 
 class Constant :public base {
  public:
-    Constant(double x) {
+    explicit Constant(double x) {
         output_value = x;
         iscal = true;
-    } 
+    }
     void set(double x) override {}  // 确保常量不可以修改
     void derivate(double pre_deri_value) override;
     bool calculate() override { pres++; return true; }  // 常量恒为真值
