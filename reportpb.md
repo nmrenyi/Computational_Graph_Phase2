@@ -54,9 +54,9 @@ a C 2
 2 4
 1 2 3 4 5 6 7 8
 2
-b = RESHAPE a 3
-2 2 2
-c = RESHAPE a c
+b = RESHAPE a 2
+4 2
+c = RESHAPE a 2
 4 2
 2
 EVAL b
