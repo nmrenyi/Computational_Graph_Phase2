@@ -31,7 +31,7 @@ class base {
     void reiscal();  // 刷新结点
     virtual double value() { return output_value; }  // 提供当前类的值
     virtual bool iscalculated() { return iscal; }  // 判断当前节点是否被调用过
-    virtual void derivate(double pre_deri_value) {}
+    virtual void derivate(double pre_deri_value) = 0;
     virtual ~base() {}  // 虚析构函数
 };
 
@@ -42,7 +42,7 @@ class Constant :public base {
         iscal = true;
     }
     void set(double x) override {}  // 确保常量不可以修改
-    void derivate(double pre_deri_value) override;
+    void derivate(double pre_deri_value);
     bool calculate() override { pres++; return true; }  // 常量恒为真值
 };
 
@@ -109,8 +109,8 @@ class AssignOperation :public base {  // assign操作
             input.push_back(save[a]);
             input.push_back(save[b]);
         }
-    // void derivate(double pre_deri_value);
     bool calculate();
+    void derivate(double pre_deri_value);
 };
 
 
@@ -145,5 +145,6 @@ class AT :public base {
         input.push_back(save[a]);
         input.push_back(save[b]);
     }
+    void derivate(double pre_deri_value);
     bool calculate();
 };
