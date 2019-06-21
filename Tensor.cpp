@@ -167,7 +167,6 @@ TensorReshapeOperation::TensorReshapeOperation(std::string target,
     std::vector<int> aimDim,
     std::map<std::string, Tensor*>& save) {
     input.push_back(save[target]);
-    // data = save[target]->getData();
     dim = aimDim;
 }
 
@@ -176,9 +175,9 @@ bool TensorReshapeOperation::calculate() {
         return true;
     }
     bool flag = input[0]->calculate();
-    if (flag) {
-        if (getDataNum(dim) == getDataNum(input[0]->getDim())) {
-            data = input[0]->getData();
+    if (flag) { //前置节点均可计算并已计算完毕
+        if (getDataNum(dim) == getDataNum(input[0]->getDim())) { //数据量相同时可以reshape
+            data = input[0]->getData(); // data不需变化
             calculated = true;
             return true;
         } else {
@@ -192,6 +191,7 @@ bool TensorReshapeOperation::calculate() {
     }
 }
 
+// CONCAT运算的结点类成员函数实现
 TensorConcatOperation::TensorConcatOperation(std::string target1,
     std::string target2, int concatway, std::map<std::string, Tensor*>& save) {
     concatWay = concatway;
@@ -199,21 +199,23 @@ TensorConcatOperation::TensorConcatOperation(std::string target1,
     input.push_back(save[target2]);
 }
 
+// CONCAT类计算
 bool TensorConcatOperation::calculate() {
     if (calculated) {
         return true;
     }
     bool flag1 = input[0]->calculate();
     bool flag2 = input[1]->calculate();
-    if (flag1 && flag2) {
-        std::vector<int> dim1 = input[0]->getDim();
-        std::vector<int> dim2 = input[1]->getDim();
-        std::vector<double> data1 = input[0]->getData();
+    if (flag1 && flag2) { // 两个前置结点均可计算并已计算完毕
+        std::vector<int> dim1 = input[0]->getDim(); // 每一维数据量的vector
+        std::vector<int> dim2 = input[1]->getDim(); 
+        std::vector<double> data1 = input[0]->getData(); // Tensor中所有数据
         std::vector<double> data2 = input[1]->getData();
-        int size1 = dim1.size();
+        int size1 = dim1.size(); 
         int size2 = dim2.size();
         if (size1 != size2) {  // 两个tensor维数不一样，无法concat
             return false;
+            std::cout << "Unable to concat. The number of dimension is not same." << std::endl;
         }
         // 判断能否concat的条件：只有拼在一起的那个轴长度可以不一样，剩下都得一样
         bool canConcat = 1;
@@ -224,6 +226,7 @@ bool TensorConcatOperation::calculate() {
             }
         }
         if (!canConcat) {
+            std::cout << "Unable to concat. The size of the axis to concat is not same." << std::endl;
             return false;
         }
 
@@ -254,7 +257,7 @@ bool TensorConcatOperation::calculate() {
             placedNum += groupNum2;
             N++;
         }
-        setData(thisdata);
+        setData(thisdata); // 赋值新结点data
         calculated = true;
         return true;
     } else {

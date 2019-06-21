@@ -5,9 +5,8 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
-#include "Node.h"
-#include "Input.h"
-#include "Node.h"
+#include "_Node.h"
+#include "_Input.h"
 
 class Session {
 public:
