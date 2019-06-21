@@ -115,15 +115,13 @@ void Inputoperate(std::map<std::string, Tensor*>& save) {
         int aimDimNum = std::stoi(buffer[4]);
         std::vector<int> aimDim;
         int tmp;
-        // int aimDataNum = 1;
         for (int i = 0; i < aimDimNum; i++) {
             std::cin >> tmp;
             aimDim.push_back(tmp);
-            // aimDataNum *= tmp;
-        }
-        // if (aimDataNum == save[buffer[3]]->getData.size()) {
+        } 
         Tensor* reshape = new TensorReshapeOperation(buffer[3], aimDim, save);
         save[buffer[0]] = reshape;
+        getchar();
     } else if (buffer.size() == 6) {  // a = CONCAT b c 2
         int concatway = std::stoi(buffer[5]);
         Tensor* concat = new TensorConcatOperation(buffer[3], buffer[4], concatway, save);
