@@ -21,20 +21,20 @@ class Counter {
 };
 // int k = 0;  // 命名计数器
 
-base* makePower(int degree, std::map <std::string, base*>& store, Counter& c) {
+Base* makePower(int degree, std::map <std::string, Base*>& store, Counter& c) {
     if (degree == 1) {
         return store["x"];
     }
     c.addCount();
     std::string next_name = "Multi" + std::to_string(c.getCount());
     store[next_name] = makePower(degree - 1, store, c);
-    return (new binaryoperation("x", next_name, "*", store));
+    return (new BinaryOperation("x", next_name, "*", store));
 }
 
-base* makeMulti(double coefficient, int degree,
-    std::map <std::string, base*>& store, Counter& c) {
+Base* makeMulti(double coefficient, int degree,
+    std::map <std::string, Base*>& store, Counter& c) {
     if (degree == 0) {
-        base* tmp = new Constant(coefficient);
+        Base* tmp = new Constant(coefficient);
         // tmp->set(coefficient);
         return tmp;
     }
@@ -44,10 +44,10 @@ base* makeMulti(double coefficient, int degree,
     c.addCount();
     std::string multi_name = "Multi" + std::to_string(c.getCount());
     store[multi_name] = makePower(degree, store, c);
-    return (new binaryoperation(constant, multi_name, "*", store));
+    return (new BinaryOperation(constant, multi_name, "*", store));
 }
-base* makePlus(std::vector<double> equation,
-std::map <std::string, base*>& store, Counter& c) {
+Base* makePlus(std::vector<double> equation,
+std::map <std::string, Base*>& store, Counter& c) {
     // 需要处理的vector是剩下一个系数没有处理了(剩下两个是初始值和最高次数)
     if (equation.size() == 3) {
         return makeMulti(equation[0], equation[2], store, c);
@@ -60,11 +60,11 @@ std::map <std::string, base*>& store, Counter& c) {
     makeMulti(equation[0], equation.back() - (equation.size() - 3), store, c);
     equation.erase(equation.begin());
     store[next_name] = makePlus(equation, store, c);
-    return (new binaryoperation(prev_name, next_name, "+", store));
+    return (new BinaryOperation(prev_name, next_name, "+", store));
 }
 
 void iteration(double initial_value, std::string target,
-std::map <std::string, base*> store, int m) {
+std::map <std::string, Base*> store, int m) {
     if (m == 5) {  // five iteration completed
         return;
     }
@@ -86,7 +86,7 @@ std::map <std::string, base*> store, int m) {
 
 void newtonMethod(std::vector<double> equation) {
     Counter& c = Counter::instance();
-    std::map <std::string, base*> store;
+    std::map <std::string, Base*> store;
     store["x"] = new Placeholder;
     store["result"] = makePlus(equation, store, c);
     double initial_value = equation[equation.size() - 2];

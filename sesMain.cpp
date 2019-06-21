@@ -9,7 +9,7 @@
 #include <iomanip>
 
 Session d_Ses;
-void InputNode() {
+void inputNode() {
     std::string name;
     char type;
     std::cin >> name; d_Ses.in << name << " ";
@@ -21,19 +21,19 @@ void InputNode() {
     }
     switch (type) {  //判断输入的变量的类型
         case 'P': {
-            base* Newplace = new Placeholder;
+            Base* Newplace = new Placeholder;
             d_Ses.save[name] = Newplace;
         }
         break;
         case 'C': {
             double value;
             std::cin >> value; d_Ses.in << value << "\n";
-            base* Newconstant = new Constant(value);
+            Base* Newconstant = new Constant(value);
             d_Ses.save[name] = Newconstant;
         }
         break;
         case 'V': {
-            base* Newvariable = new Variable;
+            Base* Newvariable = new Variable;
             d_Ses.save[name] = Newvariable;
             double value;
             std::cin >> value; d_Ses.in << value << "\n";
@@ -43,7 +43,7 @@ void InputNode() {
     }
 }
 
-void Inputoperate() {
+void inputOperate() {
     std::string str;
     std::string tmp;
     std::vector <std::string> buffer;  // 用sstream存储当前输入的关键信息
@@ -59,36 +59,36 @@ void Inputoperate() {
     }
 
     if (buffer[2] == "GRAD") {  // GRAD
-        base* gradname = new GRAD(buffer[3], d_Ses.save);
+        Base* gradname = new GRAD(buffer[3], d_Ses.save);
         d_Ses.save[buffer[0]] = gradname;
     } else if (buffer[3] == "AT") {  // AT
-        base* atname = new AT(buffer[2], buffer[4], d_Ses.save);
+        Base* atname = new AT(buffer[2], buffer[4], d_Ses.save);
         d_Ses.save[buffer[0]] = atname;
     } else if (buffer.size() == 4) {  // 单目运算符
-        base* singlename = new singleoperation(buffer[3], buffer[2], d_Ses.save);
+        Base* singlename = new SingleOperation(buffer[3], buffer[2], d_Ses.save);
         d_Ses.save[buffer[0]] = singlename;
     } else if (buffer.size() == 5) {  // 双目运算符
         if (buffer[2] == "BIND") {
-            base* bindname =
-            new bindoperation(buffer[3], buffer[4], d_Ses.save);
+            Base* bindname =
+            new BindOperation(buffer[3], buffer[4], d_Ses.save);
             d_Ses.save[buffer[0]] = bindname;
         } else if (buffer[2] == "ASSIGN") {  // ASSIGN 操作
-            base* assignName =
+            Base* assignName =
             new AssignOperation(buffer[3], buffer[4], d_Ses.save);
             d_Ses.save[buffer[0]] = assignName;
         } else {
-            base* binaryname =
-            new binaryoperation(buffer[2], buffer[4], buffer[3], d_Ses.save);
+            Base* binaryname =
+            new BinaryOperation(buffer[2], buffer[4], buffer[3], d_Ses.save);
             d_Ses.save[buffer[0]] = binaryname;
         }
     } else if (buffer.size() == 6) {  // COND
-        base* condname =
+        Base* condname =
         new COND(buffer[3], buffer[4], buffer[5], buffer[0], d_Ses.save);
         d_Ses.save[buffer[0]] = condname;
     }
 }
 
-void Inputevalnum(int answer_num) {
+void inputEvalNum(int answer_num) {
     std::string str;
     std::string tmp;
     std::vector<std::string> buffer;
@@ -142,17 +142,17 @@ int main() {
     int Nodenum = 0, operatenum = 0, evalnum = 0;
     std::cin >> Nodenum; d_Ses.in << Nodenum << "\n";
     for (int i = 1; i <= Nodenum; i++) {  // 构建变量结点
-        InputNode();
+        inputNode();
     }
     std::cin >> operatenum; d_Ses.in << operatenum << "\n";
     getchar();  // 吸收operatenum后的换行符
     for (int i = 1; i <= operatenum; i++) {  // 构建运算符结点
-        Inputoperate();
+        inputOperate();
     }
     std::cin >> evalnum;
     getchar();  // 吸收evalnum后的换行符
     for (int i = 1; i <= evalnum; i++) {  //进行输出运算操作
-        Inputevalnum(i);
+        inputEvalNum(i);
     }
     // 开始正式的session，只有当evalnum = 0时才开始
     if(!evalnum) {

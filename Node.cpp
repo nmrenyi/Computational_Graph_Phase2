@@ -6,7 +6,7 @@
 #include <iomanip>
 #include "_Node.h"
 
-void base::reiscal() {
+void Base::reiscal() {
     deri_value = pres = visit_num = 0;
     iscal = false;
     // 递归调用清空所有被调用节点的计算状态
@@ -17,7 +17,7 @@ void base::reiscal() {
     }
 }
 
-bool base::set_visit_num() {
+bool Base::set_visit_num() {
     visit_num++;
     if (visit_num == pres)
         return true;
@@ -36,7 +36,7 @@ bool Placeholder::calculate() {
 }
 
 
-bool singleoperation::calculate() {
+bool SingleOperation::calculate() {
     pres++;  // 前驱节点数目加一
     // 判断此节点是否被调用过，保证一个节点只计算一次
     if (iscalculated())
@@ -82,7 +82,7 @@ bool singleoperation::calculate() {
     }
 }
 
-bool binaryoperation::calculate() {
+bool BinaryOperation::calculate() {
     pres++;  // 前驱节点数目加一
     // 判断此节点是否被调用过，保证一个节点只计算一次
     if (iscalculated())
@@ -140,7 +140,7 @@ bool binaryoperation::calculate() {
     }
 }
 
-bool bindoperation::calculate() {
+bool BindOperation::calculate() {
     if (iscalculated())
         return true;
     bool flag = (input[0]->calculate()) && (input[1]->calculate());
@@ -228,7 +228,7 @@ void Constant::derivate(double deri_value) {
     set_deri(deri_value);  // 对自身节点导数累加
 }
 
-void singleoperation::derivate(double deri_value) {
+void SingleOperation::derivate(double deri_value) {
     set_deri(deri_value);  // 先累加之前的导数
     if (set_visit_num()) {  // 判断是否前驱都访问完毕，否则不开始计算导数
         if (operationname == "SIN") {
@@ -256,7 +256,7 @@ void singleoperation::derivate(double deri_value) {
     }
 }
 
-void binaryoperation::derivate(double deri_value) {
+void BinaryOperation::derivate(double deri_value) {
     set_deri(deri_value);  // 先累加之前的导数
     if (set_visit_num()) {  // 判断是否前驱都访问完毕，否则不开始计算导数
         if (operationname == "+") {
@@ -291,7 +291,7 @@ void binaryoperation::derivate(double deri_value) {
     }
 }
 
-void bindoperation::derivate(double deri_value) {
+void BindOperation::derivate(double deri_value) {
     set_deri(deri_value);
     input[0]->derivate(get_deri());
     input[1]->derivate(1.0);

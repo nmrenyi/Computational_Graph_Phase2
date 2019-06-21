@@ -12,7 +12,7 @@ int getDataNum(std::vector<int>dim) {
     }
     return tmp;
 }
-void InputNode(std::map<std::string, Tensor*>& save) {
+void inputNode(std::map<std::string, Tensor*>& save) {
     std::string name;
     char type;
     int dimNum = 0;
@@ -86,7 +86,7 @@ std::pair<bool, std::vector<int>> checkBroadcast(Tensor* ptr1, Tensor* ptr2) {
     return std::make_pair(true, tmp);
 }
 
-void Inputoperate(std::map<std::string, Tensor*>& save) {
+void inputOperate(std::map<std::string, Tensor*>& save) {
     std::string str;
     std::string tmp;
     std::vector <std::string> buffer;  // 用sstream存储当前输入的关键信息
@@ -155,7 +155,7 @@ void changePara(std::map<std::string, Tensor*>& save, std::string info) {
     }
 }
 
-void Inputevalnum(int answer_num, std::map<std::string, Tensor*>& save) {
+void inputEvalNum(int answer_num, std::map<std::string, Tensor*>& save) {
     std::string str;
     std::string tmp;
     std::vector<std::string> buffer;  // buffer为储存赋值运算的vector

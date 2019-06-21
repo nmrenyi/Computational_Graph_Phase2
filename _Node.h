@@ -5,9 +5,9 @@
 #include<string>
 #include<cmath>
 
-class base {
+class Base {
  protected:
-    std::vector <base*> input;
+    std::vector <Base*> input;
     double output_value;
     bool iscal = false;
     double deri_value = 0;  // 导数
@@ -32,10 +32,10 @@ class base {
     virtual double value() { return output_value; }  // 提供当前类的值
     virtual bool iscalculated() { return iscal; }  // 判断当前节点是否被调用过
     virtual void derivate(double pre_deri_value) {}
-    virtual ~base() {}  // 虚析构函数
+    virtual ~Base() {}  // 虚析构函数
 };
 
-class Constant :public base {
+class Constant :public Base {
  public:
     explicit Constant(double x) {
         output_value = x;
@@ -46,27 +46,27 @@ class Constant :public base {
     bool calculate() override { pres++; return true; }  // 常量恒为真值
 };
 
-class Placeholder :public base {
+class Placeholder :public Base {
  public:
     Placeholder() {}
     void derivate(double pre_deri_value);
     bool calculate();
 };
 
-class Variable :public base {
+class Variable :public Base {
  public:
     void derivate(double pre_deri_value);
     bool calculate() { pres++; return true; }  // V类也一定有值的存在
 };
 
 // 单目运算符
-class singleoperation :public base {
+class SingleOperation :public Base {
     std::string operationname;
     std::string nodename;
  public:
     // 构造函数中通过赋值得到该节点的上一级结点的名称以及运算符并存储起来，以便后来的计算
-    singleoperation(std::string a, std::string b,
-        std::map <std::string, base*>& save) {
+    SingleOperation(std::string a, std::string b,
+        std::map <std::string, Base*>& save) {
         input.push_back(save[a]);
         operationname = b;  // 得到该结点的操作名称
         nodename = a;
@@ -76,12 +76,12 @@ class singleoperation :public base {
 };
 
 
-class binaryoperation :public base {  // 双目运算符
+class BinaryOperation :public Base {  // 双目运算符
     std::string operationname;
  public:
     // 构造函数中通过赋值得到该节点的上一级结点的名称以及运算符并存储起来，以便后来的计算
-    binaryoperation(std::string a, std::string b, std::string c,
-        std::map <std::string, base*>& save) {
+    BinaryOperation(std::string a, std::string b, std::string c,
+        std::map <std::string, Base*>& save) {
         input.push_back(save[a]);
         input.push_back(save[b]);
         operationname = c;  // 得到该结点的操作名称
@@ -90,11 +90,11 @@ class binaryoperation :public base {  // 双目运算符
     bool calculate();
 };
 
-class bindoperation :public base {  // bind运算
+class BindOperation :public Base {  // bind运算
  public:
     // 构造函数中通过赋值得到该节点的上一级结点的名称以及运算符并存储起来，以便后来的计算
-    bindoperation(std::string a, std::string b,
-        std::map <std::string, base*>& save) {
+    BindOperation(std::string a, std::string b,
+        std::map <std::string, Base*>& save) {
             input.push_back(save[a]);
             input.push_back(save[b]);
     }
@@ -102,10 +102,10 @@ class bindoperation :public base {  // bind运算
     void derivate(double pre_deri_value);
 };
 
-class AssignOperation :public base {  // assign操作
+class AssignOperation :public Base {  // assign操作
  public:
     AssignOperation(std::string a, std::string b,
-        std::map <std::string, base*>& save) {
+        std::map <std::string, Base*>& save) {
             input.push_back(save[a]);
             input.push_back(save[b]);
         }
@@ -114,12 +114,12 @@ class AssignOperation :public base {  // assign操作
 };
 
 
-class COND :public base {
+class COND :public Base {
     std::string condname;
  public:
     // 存储该节点的上一级结点
     COND(std::string a, std::string b, std::string c, std::string d,
-        std::map <std::string, base*>& save) {
+        std::map <std::string, Base*>& save) {
         input.push_back(save[a]);
         input.push_back(save[b]);
         input.push_back(save[c]);
@@ -129,19 +129,19 @@ class COND :public base {
     bool calculate();
 };
 
-class GRAD :public base {
+class GRAD :public Base {
  public:
-    GRAD(std::string a, std::map <std::string, base*>& save) {
+    GRAD(std::string a, std::map <std::string, Base*>& save) {
         input.push_back(save[a]);
     }
     void derivate(double pre_deri_value);
     bool calculate();
 };
 
-class AT :public base {
+class AT :public Base {
  public:
     AT(std::string a, std::string b,
-        std::map <std::string, base*>& save) {
+        std::map <std::string, Base*>& save) {
         input.push_back(save[a]);
         input.push_back(save[b]);
     }
