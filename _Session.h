@@ -7,10 +7,6 @@
 #include <iomanip>
 #include "_Node.h"
 #include "_Input.h"
-<<<<<<< HEAD
-=======
-#include "_Node.h"
->>>>>>> ljj
 
 class Session {
 public:
