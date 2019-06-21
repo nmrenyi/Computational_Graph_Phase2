@@ -1,0 +1,31 @@
+2
+x P
+y P
+17
+a = x - y
+fa = GRAD a
+fax = fa AT x
+fay = fa AT y
+b = x / y
+fb = GRAD b
+fbx = fb AT x
+fby = fb AT y
+c = SIN x
+fc = GRAD c
+fcx = fc AT x
+d = EXP x
+fd = GRAD d
+fdx = fd AT x
+e = LOG x
+fe = GRAD e
+fex = fe AT x
+7
+EVAL fax 2 x 2.0 y 1.0
+EVAL fay 2 x 2.0 y 1.0
+EVAL fbx 2 x 2.0 y 1.0
+EVAL fby 2 x 2.0 y 1.0
+EVAL fcx 1 x 3.14159
+EVAL fdx 1 x 1.0
+EVAL fex 1 x 2.0
+
+本文件使用main2运行
