@@ -167,7 +167,7 @@ void inputEvalNum(int answer_num, std::map<std::string, Tensor*>& save) {
         std::string target = buffer[1];  // 要计算的对象
         if (buffer.size() == 3) {  // 不赋值，直接输出 EVAL x #
             if (save[target]->calculate()) {
-                save[target]->display();
+                save[target]->display(save[target]->getDim(), 0);
             }
         } else {  // 有赋值的过程
             int paraNum = stoi(buffer[2]);  // 此次EVAL所需参数个数
@@ -184,7 +184,7 @@ void inputEvalNum(int answer_num, std::map<std::string, Tensor*>& save) {
                 changePara(save, strInfo);
             }
             if (save[target]->calculate()) {
-                save[target]->display();
+                save[target]->display(save[target]->getDim(), 0);
             }
         }
         save[target]->initialize();

@@ -14,7 +14,7 @@ class Tensor {
     std::vector<int> getDim() const;  // 返回储存维数的vector
     void initialize();  // 使节点都定义为未调用
     virtual bool calculate() = 0;  // 是否可算,并且在此过程中进行计算
-    void display() const;  // 输出Tensor
+    void display(std::vector<int>, int) const;  // 输出Tensor
     void setData(std::vector<double>);  // 设置Data
     std::vector<double> getData() const;  // 获取Data
     virtual ~Tensor();
