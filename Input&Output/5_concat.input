@@ -1,0 +1,13 @@
+2
+a C 2
+2 2
+1 2 3 4
+b C 2
+2 2
+5 6 7 8
+2
+c = CONCAT a b 0
+d = CONCAT a b 1
+2
+EVAL c
+EVAL d
