@@ -120,7 +120,7 @@ void inputOperate(std::map<std::string, Tensor*>& save) {
         for (int i = 0; i < aimDimNum; i++) {
             std::cin >> tmp;
             aimDim.push_back(tmp);
-        } 
+        }
         Tensor* reshape = new TensorReshapeOperation(buffer[3], aimDim, save);
         save[buffer[0]] = reshape;
         getchar();
