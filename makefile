@@ -36,7 +36,7 @@ newtonMethod.o: newtonMethod.cpp _Node.h
 	g++ -o newtonMethod.o -c newtonMethod.cpp -Wall
 
 mainTensor.o: mainTensor.cpp _Tensor.h
-	g++ -c mainTensor.cpp -Wall
+	g++ -o mainTensor.o -c mainTensor.cpp -Wall
 
 TensorInput.o: tensorInput.cpp _Tensor.h
 	g++ -o TensorInput.o -c tensorInput.cpp -Wall
