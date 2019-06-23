@@ -11,30 +11,47 @@ void Tensor::initialize() {
 std::vector<int> Tensor:: getDim() const {
     return dim;
 }
-void Tensor::display() const {
-    if (dim.size() == 1) {
-        std::cout << "[" << data[0] << "]" << std::endl;
-    } else if (dim.size() == 2) {
-        std::cout << "[";
-        for (int i = 0; i < dim[0]; i++) {
-            std::cout << "[";
-                for (int j = 0; j < dim[1] - 1; j++) {
-                    std::cout << data[i * dim[1] + j] << ", ";
-                }
-                std::cout << data[i * dim[1] + dim[1] - 1];
-            std::cout << "]";
-            if (i != dim[0] - 1) {
-                std::cout << "," << std::endl;
-            }
+// void Tensor::display() const {
+//     if (dim.size() == 1) {
+//         std::cout << "[" << data[0] << "]" << std::endl;
+//     } else if (dim.size() == 2) {
+//         std::cout << "[";
+//         for (int i = 0; i < dim[0]; i++) {
+//             std::cout << "[";
+//                 for (int j = 0; j < dim[1] - 1; j++) {
+//                     std::cout << data[i * dim[1] + j] << ", ";
+//                 }
+//                 std::cout << data[i * dim[1] + dim[1] - 1];
+//             std::cout << "]";
+//             if (i != dim[0] - 1) {
+//                 std::cout << "," << std::endl;
+//             }
+//         }
+//         std::cout << "]" << std::endl;
+//     } else {
+//         std::cout << "trivial output method:" << std::endl;
+//         for (auto x : data) {
+//             std::cout << x << " ";
+//         }
+//     }
+//     std::cout << std::endl;
+// }
+
+void Tensor::display(std::vector<int>info, int pos) const {
+    std::cout << "[";
+    if (info.size() != 1) {
+        for (int i = 0; i < info[0]; i++) {
+            std::vector<int>tmp = info;
+            tmp.erase(tmp.begin());
+            display(tmp, pos + i * tmp[0]);
         }
-        std::cout << "]" << std::endl;
     } else {
-        std::cout << "trivial output method:" << std::endl;
-        for (auto x : data) {
-            std::cout << x << " ";
+        for (int i = 0; i < info[0] - 1; i++) {
+            std::cout << data[pos + i] << ", ";
         }
+        std::cout << data[pos + info[0] - 1];
     }
-    std::cout << std::endl;
+    std::cout << "]" << std::endl;
 }
 
 void Tensor::setData(std::vector<double> data_) {
