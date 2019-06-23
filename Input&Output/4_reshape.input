@@ -5,8 +5,8 @@ a C 2
 2
 b = RESHAPE a 3
 2 2 2
-c = RESHAPE a c
+c = RESHAPE a 2
 4 2
 2
-EVAL b
-EVAL c
+EVAL b #
+EVAL c #

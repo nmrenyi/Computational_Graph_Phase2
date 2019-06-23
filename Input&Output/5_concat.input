@@ -9,5 +9,5 @@ b C 2
 c = CONCAT a b 0
 d = CONCAT a b 1
 2
-EVAL c
-EVAL d
+EVAL c #
+EVAL d #
